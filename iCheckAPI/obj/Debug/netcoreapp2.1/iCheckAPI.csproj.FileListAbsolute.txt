@@ -3,7 +3,6 @@ C:\Users\Mohammed\source\repos\iCheckAPI\iCheckAPI\bin\Debug\netcoreapp2.1\iChec
 C:\Users\Mohammed\source\repos\iCheckAPI\iCheckAPI\bin\Debug\netcoreapp2.1\iCheckAPI.runtimeconfig.dev.json
 C:\Users\Mohammed\source\repos\iCheckAPI\iCheckAPI\bin\Debug\netcoreapp2.1\iCheckAPI.dll
 C:\Users\Mohammed\source\repos\iCheckAPI\iCheckAPI\obj\Debug\netcoreapp2.1\iCheckAPI.csprojAssemblyReference.cache
-C:\Users\Mohammed\source\repos\iCheckAPI\iCheckAPI\obj\Debug\netcoreapp2.1\iCheckAPI.csproj.CoreCompileInputs.cache
 C:\Users\Mohammed\source\repos\iCheckAPI\iCheckAPI\obj\Debug\netcoreapp2.1\iCheckAPI.RazorAssemblyInfo.cache
 C:\Users\Mohammed\source\repos\iCheckAPI\iCheckAPI\obj\Debug\netcoreapp2.1\iCheckAPI.RazorAssemblyInfo.cs
 C:\Users\Mohammed\source\repos\iCheckAPI\iCheckAPI\obj\Debug\netcoreapp2.1\iCheckAPI.AssemblyInfoInputs.cache
@@ -12,3 +11,6 @@ C:\Users\Mohammed\source\repos\iCheckAPI\iCheckAPI\obj\Debug\netcoreapp2.1\iChec
 C:\Users\Mohammed\source\repos\iCheckAPI\iCheckAPI\bin\Debug\netcoreapp2.1\iCheckAPI.pdb
 C:\Users\Mohammed\source\repos\iCheckAPI\iCheckAPI\obj\Debug\netcoreapp2.1\iCheckAPI.dll
 C:\Users\Mohammed\source\repos\iCheckAPI\iCheckAPI\obj\Debug\netcoreapp2.1\iCheckAPI.pdb
+C:\Users\Mohammed\source\repos\iCheckAPI\iCheckAPI\bin\Debug\netcoreapp2.1\appsettings.Development.json
+C:\Users\Mohammed\source\repos\iCheckAPI\iCheckAPI\bin\Debug\netcoreapp2.1\appsettings.json
+C:\Users\Mohammed\source\repos\iCheckAPI\iCheckAPI\bin\Debug\netcoreapp2.1\Properties\launchSettings.json

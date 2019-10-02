@@ -52,6 +52,24 @@ namespace iCheckAPI.Controllers
             return Ok(engins);
         }
 
+        [HttpGet("name/{nomEngin}")]
+        public async Task<IActionResult> GetEnginsByName([FromRoute] string nomEngin)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var engins = await _context.Engins.FirstOrDefaultAsync(x => x.NomEngin == nomEngin);
+
+            if (engins == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(engins);
+        }
+
         // PUT: api/Engins/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutEngins([FromRoute] int id, [FromBody] Engins engins)
