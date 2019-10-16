@@ -38,7 +38,7 @@ namespace iCheckAPI
                 });
 
 
-            services.AddDbContext<ICheckContext>(ctx => ctx.UseSqlServer(Configuration.GetConnectionString("ICheck")).EnableSensitiveDataLogging());
+            services.AddDbContext<icheckContext>(ctx => ctx.UseSqlServer(Configuration.GetConnectionString("ICheck")).EnableSensitiveDataLogging());
 
             /*services.Configure<Settings>(
                     Configuration.GetSection(nameof(Settings)));*/

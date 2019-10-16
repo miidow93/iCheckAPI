@@ -4,27 +4,29 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace iCheckAPI.Models
 {
-    public partial class ICheckContext : DbContext
+    public partial class icheckContext : DbContext
     {
-        public ICheckContext()
+        public icheckContext()
         {
         }
 
-        public ICheckContext(DbContextOptions<ICheckContext> options)
+        public icheckContext(DbContextOptions<icheckContext> options)
             : base(options)
         {
         }
 
         public virtual DbSet<Conducteur> Conducteur { get; set; }
         public virtual DbSet<Engins> Engins { get; set; }
+        public virtual DbSet<Role> Role { get; set; }
         public virtual DbSet<Societe> Societe { get; set; }
+        public virtual DbSet<Users> Users { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=.;Database=iCheck;Trusted_Connection=True;");
+                optionsBuilder.UseSqlServer("Server=.;Database=icheck;Trusted_Connection=True;");
             }
         }
 
@@ -67,10 +69,10 @@ namespace iCheckAPI.Models
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
-                entity.HasOne(d => d.IdSocieteNavigation)
+                entity.HasOne(d => d.IdsocieteNavigation)
                     .WithMany(p => p.Conducteur)
                     .HasForeignKey(d => d.IdSociete)
-                    .HasConstraintName("FK__conducteu__idsoc__3B75D760");
+                    .HasConstraintName("FK__conducteu__idsoc__5165187F");
             });
 
             modelBuilder.Entity<Engins>(entity =>
@@ -83,9 +85,27 @@ namespace iCheckAPI.Models
                     .HasColumnName("imageEngin")
                     .IsUnicode(false);
 
+                entity.Property(e => e.Matricule)
+                    .HasColumnName("matricule")
+                    .IsUnicode(false);
+
                 entity.Property(e => e.NomEngin)
                     .HasColumnName("nomEngin")
                     .HasMaxLength(100)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<Role>(entity =>
+            {
+                entity.HasKey(e => e.Idrole);
+
+                entity.ToTable("role");
+
+                entity.Property(e => e.Idrole).HasColumnName("idrole");
+
+                entity.Property(e => e.Role1)
+                    .HasColumnName("role")
+                    .HasMaxLength(80)
                     .IsUnicode(false);
             });
 
@@ -101,6 +121,40 @@ namespace iCheckAPI.Models
                     .HasColumnName("libelle")
                     .HasMaxLength(100)
                     .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<Users>(entity =>
+            {
+                entity.ToTable("users");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.Email)
+                    .HasColumnName("email")
+                    .HasMaxLength(80)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Idrole).HasColumnName("idrole");
+
+                entity.Property(e => e.NomComplet)
+                    .HasColumnName("nomComplet")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Password)
+                    .HasColumnName("password")
+                    .HasMaxLength(128)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UserName)
+                    .HasColumnName("userName")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.IdroleNavigation)
+                    .WithMany(p => p.Users)
+                    .HasForeignKey(d => d.Idrole)
+                    .HasConstraintName("FK__users__idrole__52593CB8");
             });
         }
     }

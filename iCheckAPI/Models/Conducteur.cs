@@ -14,6 +14,6 @@ namespace iCheckAPI.Models
         public string Patente { get; set; }
         public int? IdSociete { get; set; }
 
-        public Societe IdSocieteNavigation { get; set; }
+        public Societe IdsocieteNavigation { get; set; }
     }
 }

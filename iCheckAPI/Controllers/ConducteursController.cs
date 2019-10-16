@@ -13,9 +13,9 @@ namespace iCheckAPI.Controllers
     [ApiController]
     public class ConducteursController : ControllerBase
     {
-        private readonly ICheckContext _context;
+        private readonly icheckContext _context;
 
-        public ConducteursController(ICheckContext context)
+        public ConducteursController(icheckContext context)
         {
             _context = context;
         }
@@ -152,7 +152,7 @@ namespace iCheckAPI.Controllers
 
         private int SocieteExists(string libelle)
         {
-            if(_context.Societe.Any(e => e.Libelle.Equals(libelle)))
+            if(!_context.Societe.Any(e => e.Libelle.Equals(libelle)))
             {
                 Societe societe = new Societe()
                 {
