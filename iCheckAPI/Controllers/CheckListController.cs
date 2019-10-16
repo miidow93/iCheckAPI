@@ -17,11 +17,16 @@ namespace iCheckAPI.Controllers
     public class CheckListController : ControllerBase
     {
 
-        readonly CheckListRepo _checkListRepo;
+        private readonly CheckListRepo _checkListRepo;
+        private readonly ICheckContext _context;
+        private readonly IConducteurRepo _conducteurRepo;
+        private readonly IVehiculeRepo _vehiculeRepo;
 
-        public CheckListController(CheckListRepo checkListRepo)
+        public CheckListController(CheckListRepo checkListRepo, IConducteurRepo conducteurRepo, IVehiculeRepo vehiculeRepo)
         {
             _checkListRepo = checkListRepo;
+            _conducteurRepo = conducteurRepo;
+            _vehiculeRepo = vehiculeRepo;
         }
 
         // GET: api/CheckList
@@ -63,6 +68,31 @@ namespace iCheckAPI.Controllers
             System.Diagnostics.Debug.WriteLine(jsonDoc);
             System.Diagnostics.Debug.WriteLine(checkList.CatchAll);
 
+            var conducteur = _conducteurRepo.GetConducteurByCIN(checkList.Conducteur["cin"]);
+            var vehicule = _vehiculeRepo.GetVehiculeByMatricule(checkList.Vehicule["matricule"]);
+
+            if(!conducteur)
+            {
+                Conducteur cond = new Conducteur()
+                {
+                    Cin = checkList.Conducteur["cin"],
+                    NomComplet = checkList.Conducteur["nomComplet"]
+                };
+
+                await _conducteurRepo.Create(cond);
+            }
+
+            if(!vehicule)
+            {
+                Vehicule vehi = new Vehicule()
+                {
+                    Matricule = checkList.Vehicule["matricule"],
+                    IdEngin = _vehiculeRepo.GetEnginByName(checkList.Vehicule["engin"])
+                };
+
+                await _vehiculeRepo.Create(vehi);
+            }
+
             await _checkListRepo.Create(checkList);
 
             return CreatedAtAction("GetCheckList", new { id = checkList.Id.ToString() }, checkList);
@@ -82,6 +112,31 @@ namespace iCheckAPI.Controllers
             var jsonDoc = JsonConvert.SerializeObject(checkList.CatchAll);
 
             checkList.CatchAll = BsonSerializer.Deserialize<Dictionary<string, object>>(jsonDoc);
+
+            var conducteur = _conducteurRepo.GetConducteurByCIN(checkList.Conducteur["cin"]);
+            var vehicule = _vehiculeRepo.GetVehiculeByMatricule(checkList.Vehicule["matricule"]);
+
+            if (!conducteur)
+            {
+                Conducteur cond = new Conducteur()
+                {
+                    Cin = checkList.Conducteur["cin"],
+                    NomComplet = checkList.Conducteur["nomComplet"]
+                };
+
+                await _conducteurRepo.Create(cond);
+            }
+
+            if (!vehicule)
+            {
+                Vehicule vehi = new Vehicule()
+                {
+                    Matricule = checkList.Vehicule["matricule"],
+                    IdEngin = _vehiculeRepo.GetEnginByName(checkList.Vehicule["engin"])
+                };
+
+                await _vehiculeRepo.Create(vehi);
+            }
 
             await _checkListRepo.Update(checkList);
 

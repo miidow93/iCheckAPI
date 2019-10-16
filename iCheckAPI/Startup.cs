@@ -46,7 +46,12 @@ namespace iCheckAPI
             services.AddSingleton<ISettings>(sp => sp.GetRequiredService<IOptions<Settings>>().Value);
             // services.AddTransient<ICheckListRepo, CheckListRepo>();
             // services.AddScoped<ICheckListRepo, CheckListRepo>();
+            services.AddScoped<IConducteurRepo, ConducteurRepo>();
+            services.AddScoped<IVehiculeRepo, VehiculeRepo>();
+            // services.AddSingleton<IConducteurRepo, ConducteurRepo>();
             services.AddSingleton<CheckListRepo>();
+
+
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
