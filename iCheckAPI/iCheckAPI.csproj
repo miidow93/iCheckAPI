@@ -15,4 +15,6 @@
     <PackageReference Include="MongoDB.Driver" Version="2.9.1" />
   </ItemGroup>
 
+  <ProjectExtensions><VisualStudio><UserProperties properties_4launchsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
+
 </Project>

@@ -18,13 +18,14 @@ namespace iCheckAPI.Models
         public virtual DbSet<Conducteur> Conducteur { get; set; }
         public virtual DbSet<Engins> Engins { get; set; }
         public virtual DbSet<Societe> Societe { get; set; }
+        public virtual DbSet<Vehicule> Vehicule { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=.;Database=iCheck;Trusted_Connection=True;");
+                optionsBuilder.UseSqlServer("Data Source=.;Initial Catalog=iCheck; Integrated Security=True;");
             }
         }
 
@@ -55,10 +56,10 @@ namespace iCheckAPI.Models
                     .HasColumnName("dateValiditeAssurance")
                     .HasColumnType("date");
 
-                entity.Property(e => e.IdSociete).HasColumnName("idsociete");
+                entity.Property(e => e.IdSociete).HasColumnName("idSociete");
 
                 entity.Property(e => e.NomComplet)
-                    .HasColumnName("nomcomplet")
+                    .HasColumnName("nomComplet")
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
@@ -70,7 +71,7 @@ namespace iCheckAPI.Models
                 entity.HasOne(d => d.IdSocieteNavigation)
                     .WithMany(p => p.Conducteur)
                     .HasForeignKey(d => d.IdSociete)
-                    .HasConstraintName("FK__conducteu__idsoc__3B75D760");
+                    .HasConstraintName("FK__conducteu__idsoc__4D94879B");
             });
 
             modelBuilder.Entity<Engins>(entity =>
@@ -91,16 +92,32 @@ namespace iCheckAPI.Models
 
             modelBuilder.Entity<Societe>(entity =>
             {
-                entity.HasKey(e => e.IdSociete);
-
                 entity.ToTable("societe");
 
-                entity.Property(e => e.IdSociete).HasColumnName("idsociete");
+                entity.Property(e => e.Id).HasColumnName("id");
 
                 entity.Property(e => e.Libelle)
                     .HasColumnName("libelle")
                     .HasMaxLength(100)
                     .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<Vehicule>(entity =>
+            {
+                entity.ToTable("vehicule");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.IdEngin).HasColumnName("idEngin");
+
+                entity.Property(e => e.Matricule)
+                    .HasColumnName("matricule")
+                    .HasMaxLength(30);
+
+                entity.HasOne(d => d.IdEnginNavigation)
+                    .WithMany(p => p.Vehicule)
+                    .HasForeignKey(d => d.IdEngin)
+                    .HasConstraintName("FK__vehicule__idEngi__5FB337D6");
             });
         }
     }

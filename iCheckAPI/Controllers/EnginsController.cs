@@ -22,9 +22,9 @@ namespace iCheckAPI.Controllers
 
         // GET: api/Engins
         [HttpGet]
-        public IEnumerable<Engins> GetEngins()
+        public async Task<IEnumerable<Engins>> GetEngins()
         {
-            return _context.Engins;
+            return await _context.Engins.ToListAsync();
         }
 
         [HttpGet("test")]
