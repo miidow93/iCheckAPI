@@ -22,11 +22,12 @@ namespace iCheckAPI.Controllers
         private readonly IConducteurRepo _conducteurRepo;
         private readonly IVehiculeRepo _vehiculeRepo;
 
-        public CheckListController(CheckListRepo checkListRepo, IConducteurRepo conducteurRepo, IVehiculeRepo vehiculeRepo)
+        public CheckListController(CheckListRepo checkListRepo, ICheckContext context, IConducteurRepo conducteurRepo, IVehiculeRepo vehiculeRepo)
         {
             _checkListRepo = checkListRepo;
             _conducteurRepo = conducteurRepo;
             _vehiculeRepo = vehiculeRepo;
+            _context = context;
         }
 
         // GET: api/CheckList
@@ -94,7 +95,9 @@ namespace iCheckAPI.Controllers
             }
 
             await _checkListRepo.Create(checkList);
-
+            System.Diagnostics.Debug.WriteLine(checkList.Id.ToString());
+            _context.CheckListRef.Add(new CheckListRef() { IdCheckListRef = checkList.Id.ToString() });
+            _context.SaveChanges();
             return CreatedAtAction("GetCheckList", new { id = checkList.Id.ToString() }, checkList);
         }
 
