@@ -152,7 +152,7 @@ namespace iCheckAPI.Controllers
 
         private int SocieteExists(string libelle)
         {
-            if(_context.Societe.Any(e => e.Libelle.Equals(libelle)))
+            if(!_context.Societe.Any(e => e.Libelle.Equals(libelle)))
             {
                 Societe societe = new Societe()
                 {

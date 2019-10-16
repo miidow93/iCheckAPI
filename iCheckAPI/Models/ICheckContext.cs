@@ -17,7 +17,9 @@ namespace iCheckAPI.Models
 
         public virtual DbSet<Conducteur> Conducteur { get; set; }
         public virtual DbSet<Engins> Engins { get; set; }
+        public virtual DbSet<Role> Role { get; set; }
         public virtual DbSet<Societe> Societe { get; set; }
+        public virtual DbSet<Users> Users { get; set; }
         public virtual DbSet<Vehicule> Vehicule { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -90,6 +92,18 @@ namespace iCheckAPI.Models
                     .IsUnicode(false);
             });
 
+            modelBuilder.Entity<Role>(entity =>
+            {
+                entity.ToTable("role");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.Libelle)
+                    .HasColumnName("libelle")
+                    .HasMaxLength(80)
+                    .IsUnicode(false);
+            });
+
             modelBuilder.Entity<Societe>(entity =>
             {
                 entity.ToTable("societe");
@@ -100,6 +114,40 @@ namespace iCheckAPI.Models
                     .HasColumnName("libelle")
                     .HasMaxLength(100)
                     .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<Users>(entity =>
+            {
+                entity.ToTable("users");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.Email)
+                    .HasColumnName("email")
+                    .HasMaxLength(80)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.IdRole).HasColumnName("idRole");
+
+                entity.Property(e => e.NomComplet)
+                    .HasColumnName("nomComplet")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Password)
+                    .HasColumnName("password")
+                    .HasMaxLength(128)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Username)
+                    .HasColumnName("username")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.IdRoleNavigation)
+                    .WithMany(p => p.Users)
+                    .HasForeignKey(d => d.IdRole)
+                    .HasConstraintName("FK__users__idrole__71D1E811");
             });
 
             modelBuilder.Entity<Vehicule>(entity =>
