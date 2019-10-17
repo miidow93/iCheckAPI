@@ -50,6 +50,22 @@ namespace iCheckAPI.Controllers
             return Ok(checkList);
         }
 
+        [HttpGet("bydate/{date}")]
+        public async Task<IActionResult> GetCheckListByDate(string date)
+        {
+            // var datetime = DateTime.ParseExact(date, "yyyy-MM-dd HH:mm:ss", null);
+
+            var checkList = await _checkListRepo.GetCheckListByDate(DateTime.Parse(date));
+            if (checkList == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(checkList);
+        }
+
+
+
         // POST: api/CheckList
         [HttpPost]
         public async Task<ActionResult<CheckList>> Post([FromBody] CheckList checkList)

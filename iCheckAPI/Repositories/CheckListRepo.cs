@@ -26,10 +26,10 @@ namespace iCheckAPI.Repositories
             return await _context.Find(_ => true).ToListAsync();
         }
 
-        public Task<CheckList> GetCheckListByDate(DateTime date)
+        public async Task<IEnumerable<CheckList>> GetCheckListByDate(DateTime date)
         {
             FilterDefinition<CheckList> filter = Builders<CheckList>.Filter.Eq(d => d.Date, date);
-            return _context.Find(filter).FirstOrDefaultAsync();
+            return await _context.Find(filter).ToListAsync();
         }
 
         public Task<CheckList> GetCheckListByID(string id)
@@ -81,7 +81,7 @@ namespace iCheckAPI.Repositories
     public interface ICheckListRepo
     {
         Task<IEnumerable<CheckList>> GetAllCheckList();
-        Task<CheckList> GetCheckListByDate(DateTime date);
+        Task<IEnumerable<CheckList>> GetCheckListByDate(DateTime date);
         Task<CheckList> GetCheckListByID(string id);
         Task Create(CheckList checkList);
         Task<bool> Update(CheckList checkList);
