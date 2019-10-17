@@ -16,10 +16,10 @@ namespace iCheckAPI.Controllers
     [ApiController]
     public class EnginsController : ControllerBase
     {
-        private readonly icheckContext _context;
+        private readonly ICheckContext _context;
         public static IHostingEnvironment _environment;
 
-        public EnginsController(icheckContext context,IHostingEnvironment environment)
+        public EnginsController(ICheckContext context,IHostingEnvironment environment)
         {
             _context = context;
             _environment = environment;
@@ -27,9 +27,9 @@ namespace iCheckAPI.Controllers
 
         // GET: api/Engins
         [HttpGet]
-        public IEnumerable<Engins> GetEngins()
+        public async Task<IEnumerable<Engins>> GetEngins()
         {
-            return _context.Engins;
+            return await _context.Engins.ToListAsync();
         }
 
         [HttpGet("test")]

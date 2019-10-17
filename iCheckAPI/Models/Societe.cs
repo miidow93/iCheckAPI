@@ -10,7 +10,7 @@ namespace iCheckAPI.Models
             Conducteur = new HashSet<Conducteur>();
         }
 
-        public int IdSociete { get; set; }
+        public int Id { get; set; }
         public string Libelle { get; set; }
 
         public ICollection<Conducteur> Conducteur { get; set; }

@@ -11,56 +11,67 @@ namespace iCheckAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class SocietesController : ControllerBase
+    public class VehiculesController : ControllerBase
     {
         private readonly ICheckContext _context;
 
-        public SocietesController(ICheckContext context)
+        public VehiculesController(ICheckContext context)
         {
             _context = context;
         }
 
-        // GET: api/Societes
+        // GET: api/Vehicules
         [HttpGet]
-        public IEnumerable<Societe> GetSociete()
+        public IEnumerable<Vehicule> GetVehicule()
         {
-            return _context.Societe;
+            return _context.Vehicule;
         }
 
-        // GET: api/Societes/5
+        // GET: api/Vehicules/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetSociete([FromRoute] int id)
+        public async Task<IActionResult> GetVehicule([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var societe = await _context.Societe.FindAsync(id);
+            var vehicule = await _context.Vehicule.FindAsync(id);
 
-            if (societe == null)
+            if (vehicule == null)
             {
                 return NotFound();
             }
 
-            return Ok(societe);
+            return Ok(vehicule);
         }
 
-        // PUT: api/Societes/5
+
+        [HttpGet("{engin}")]
+        public IEnumerable<Vehicule> GetVehiculeByEngin([FromRoute] string engin)
+        {
+            var vehicules = _context.Vehicule.Where(x => x.IdEnginNavigation.NomEngin.ToLower() == engin.ToLower());
+
+            return vehicules;
+        }
+
+
+
+        // PUT: api/Vehicules/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutSociete([FromRoute] int id, [FromBody] Societe societe)
+        public async Task<IActionResult> PutVehicule([FromRoute] int id, [FromBody] Vehicule vehicule)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != societe.Id)
+            if (id != vehicule.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(societe).State = EntityState.Modified;
+            _context.Entry(vehicule).State = EntityState.Modified;
 
             try
             {
@@ -68,7 +79,7 @@ namespace iCheckAPI.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!SocieteExists(id))
+                if (!VehiculeExists(id))
                 {
                     return NotFound();
                 }
@@ -81,45 +92,45 @@ namespace iCheckAPI.Controllers
             return NoContent();
         }
 
-        // POST: api/Societes
+        // POST: api/Vehicules
         [HttpPost]
-        public async Task<IActionResult> PostSociete([FromBody] Societe societe)
+        public async Task<IActionResult> PostVehicule([FromBody] Vehicule vehicule)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            _context.Societe.Add(societe);
+            _context.Vehicule.Add(vehicule);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetSociete", new { id = societe.Id }, societe);
+            return CreatedAtAction("GetVehicule", new { id = vehicule.Id }, vehicule);
         }
 
-        // DELETE: api/Societes/5
+        // DELETE: api/Vehicules/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteSociete([FromRoute] int id)
+        public async Task<IActionResult> DeleteVehicule([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var societe = await _context.Societe.FindAsync(id);
-            if (societe == null)
+            var vehicule = await _context.Vehicule.FindAsync(id);
+            if (vehicule == null)
             {
                 return NotFound();
             }
 
-            _context.Societe.Remove(societe);
+            _context.Vehicule.Remove(vehicule);
             await _context.SaveChangesAsync();
 
-            return Ok(societe);
+            return Ok(vehicule);
         }
 
-        private bool SocieteExists(int id)
+        private bool VehiculeExists(int id)
         {
-            return _context.Societe.Any(e => e.Id == id);
+            return _context.Vehicule.Any(e => e.Id == id);
         }
     }
 }

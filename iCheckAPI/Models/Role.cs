@@ -10,8 +10,8 @@ namespace iCheckAPI.Models
             Users = new HashSet<Users>();
         }
 
-        public int Idrole { get; set; }
-        public string Role1 { get; set; }
+        public int Id { get; set; }
+        public string Libelle { get; set; }
 
         public ICollection<Users> Users { get; set; }
     }

@@ -13,9 +13,9 @@ namespace iCheckAPI.Controllers
     [ApiController]
     public class ConducteursController : ControllerBase
     {
-        private readonly icheckContext _context;
+        private readonly ICheckContext _context;
 
-        public ConducteursController(icheckContext context)
+        public ConducteursController(ICheckContext context)
         {
             _context = context;
         }
@@ -161,10 +161,10 @@ namespace iCheckAPI.Controllers
 
                 _context.Societe.Add(societe);
                 _context.SaveChanges();
-                return societe.IdSociete;
+                return societe.Id;
             }
 
-            return _context.Societe.Where(s => s.Libelle.Equals(libelle)).FirstOrDefault().IdSociete;
+            return _context.Societe.Where(s => s.Libelle.Equals(libelle)).FirstOrDefault().Id;
         }
     }
 }

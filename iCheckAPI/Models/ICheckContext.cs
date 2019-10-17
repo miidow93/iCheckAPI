@@ -4,13 +4,13 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace iCheckAPI.Models
 {
-    public partial class icheckContext : DbContext
+    public partial class ICheckContext : DbContext
     {
-        public icheckContext()
+        public ICheckContext()
         {
         }
 
-        public icheckContext(DbContextOptions<icheckContext> options)
+        public ICheckContext(DbContextOptions<ICheckContext> options)
             : base(options)
         {
         }
@@ -20,13 +20,14 @@ namespace iCheckAPI.Models
         public virtual DbSet<Role> Role { get; set; }
         public virtual DbSet<Societe> Societe { get; set; }
         public virtual DbSet<Users> Users { get; set; }
+        public virtual DbSet<Vehicule> Vehicule { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=.;Database=icheck;Trusted_Connection=True;");
+                optionsBuilder.UseSqlServer("Data Source=.;Initial Catalog=iCheck; Integrated Security=True;");
             }
         }
 
@@ -57,10 +58,10 @@ namespace iCheckAPI.Models
                     .HasColumnName("dateValiditeAssurance")
                     .HasColumnType("date");
 
-                entity.Property(e => e.IdSociete).HasColumnName("idsociete");
+                entity.Property(e => e.IdSociete).HasColumnName("idSociete");
 
                 entity.Property(e => e.NomComplet)
-                    .HasColumnName("nomcomplet")
+                    .HasColumnName("nomComplet")
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
@@ -69,10 +70,10 @@ namespace iCheckAPI.Models
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
-                entity.HasOne(d => d.IdsocieteNavigation)
+                entity.HasOne(d => d.IdSocieteNavigation)
                     .WithMany(p => p.Conducteur)
                     .HasForeignKey(d => d.IdSociete)
-                    .HasConstraintName("FK__conducteu__idsoc__5165187F");
+                    .HasConstraintName("FK__conducteu__idsoc__4D94879B");
             });
 
             modelBuilder.Entity<Engins>(entity =>
@@ -85,10 +86,6 @@ namespace iCheckAPI.Models
                     .HasColumnName("imageEngin")
                     .IsUnicode(false);
 
-                entity.Property(e => e.Matricule)
-                    .HasColumnName("matricule")
-                    .IsUnicode(false);
-
                 entity.Property(e => e.NomEngin)
                     .HasColumnName("nomEngin")
                     .HasMaxLength(100)
@@ -97,25 +94,21 @@ namespace iCheckAPI.Models
 
             modelBuilder.Entity<Role>(entity =>
             {
-                entity.HasKey(e => e.Idrole);
-
                 entity.ToTable("role");
 
-                entity.Property(e => e.Idrole).HasColumnName("idrole");
+                entity.Property(e => e.Id).HasColumnName("id");
 
-                entity.Property(e => e.Role1)
-                    .HasColumnName("role")
+                entity.Property(e => e.Libelle)
+                    .HasColumnName("libelle")
                     .HasMaxLength(80)
                     .IsUnicode(false);
             });
 
             modelBuilder.Entity<Societe>(entity =>
             {
-                entity.HasKey(e => e.IdSociete);
-
                 entity.ToTable("societe");
 
-                entity.Property(e => e.IdSociete).HasColumnName("idsociete");
+                entity.Property(e => e.Id).HasColumnName("id");
 
                 entity.Property(e => e.Libelle)
                     .HasColumnName("libelle")
@@ -134,7 +127,7 @@ namespace iCheckAPI.Models
                     .HasMaxLength(80)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Idrole).HasColumnName("idrole");
+                entity.Property(e => e.IdRole).HasColumnName("idRole");
 
                 entity.Property(e => e.NomComplet)
                     .HasColumnName("nomComplet")
@@ -146,15 +139,33 @@ namespace iCheckAPI.Models
                     .HasMaxLength(128)
                     .IsUnicode(false);
 
-                entity.Property(e => e.UserName)
-                    .HasColumnName("userName")
+                entity.Property(e => e.Username)
+                    .HasColumnName("username")
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
-                entity.HasOne(d => d.IdroleNavigation)
+                entity.HasOne(d => d.IdRoleNavigation)
                     .WithMany(p => p.Users)
-                    .HasForeignKey(d => d.Idrole)
-                    .HasConstraintName("FK__users__idrole__52593CB8");
+                    .HasForeignKey(d => d.IdRole)
+                    .HasConstraintName("FK__users__idrole__71D1E811");
+            });
+
+            modelBuilder.Entity<Vehicule>(entity =>
+            {
+                entity.ToTable("vehicule");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.IdEngin).HasColumnName("idEngin");
+
+                entity.Property(e => e.Matricule)
+                    .HasColumnName("matricule")
+                    .HasMaxLength(30);
+
+                entity.HasOne(d => d.IdEnginNavigation)
+                    .WithMany(p => p.Vehicule)
+                    .HasForeignKey(d => d.IdEngin)
+                    .HasConstraintName("FK__vehicule__idEngi__5FB337D6");
             });
         }
     }
