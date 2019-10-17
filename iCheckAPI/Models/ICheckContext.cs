@@ -15,6 +15,7 @@ namespace iCheckAPI.Models
         {
         }
 
+        public virtual DbSet<CheckListRef> CheckListRef { get; set; }
         public virtual DbSet<Conducteur> Conducteur { get; set; }
         public virtual DbSet<Engins> Engins { get; set; }
         public virtual DbSet<Role> Role { get; set; }
@@ -33,6 +34,17 @@ namespace iCheckAPI.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<CheckListRef>(entity =>
+            {
+                entity.ToTable("checkListRef");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.IdCheckListRef)
+                    .HasColumnName("idCheckListRef")
+                    .IsUnicode(false);
+            });
+
             modelBuilder.Entity<Conducteur>(entity =>
             {
                 entity.ToTable("conducteur");

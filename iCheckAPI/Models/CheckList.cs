@@ -18,8 +18,8 @@ namespace iCheckAPI.Models
         [BsonElement("conducteur")]
         public Dictionary<string, string> Conducteur { get; set; }
 
-        [BsonElement("tracteur")]
-        public Dictionary<string, string> Tracteur { get; set; }
+        [BsonElement("vehicule")]
+        public Dictionary<string, string> Vehicule { get; set; }
 
         [BsonElement("date")]
         [BsonDateTimeOptions(DateOnly = false, Kind = DateTimeKind.Utc, Representation = BsonType.DateTime)]
