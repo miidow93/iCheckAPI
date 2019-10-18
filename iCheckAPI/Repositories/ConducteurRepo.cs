@@ -13,9 +13,9 @@ namespace iCheckAPI.Repositories
         {
             _context = context;
         }
-        public bool GetConducteurByCIN(string cin)
+        public Conducteur GetConducteurByCIN(string cin)
         {
-            return _context.Conducteur.Any(x => x.Cin == cin);
+            return _context.Conducteur.FirstOrDefault(x => x.Cin == cin);
         }
 
         public async Task Create(Conducteur conducteur)
@@ -29,7 +29,7 @@ namespace iCheckAPI.Repositories
 
     public interface IConducteurRepo
     {
-        bool GetConducteurByCIN(string cin);
+        Conducteur GetConducteurByCIN(string cin);
 
         Task Create(Conducteur conducteur);
     }

@@ -6,6 +6,7 @@ using iCheckAPI.Models;
 using iCheckAPI.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using Newtonsoft.Json;
@@ -88,7 +89,10 @@ namespace iCheckAPI.Controllers
             var conducteur = _conducteurRepo.GetConducteurByCIN(checkList.Conducteur["cin"]);
             var vehicule = _vehiculeRepo.GetVehiculeByMatricule(checkList.Vehicule["matricule"]);
 
-            if(!conducteur)
+            var conducteurID = conducteur.Id;
+            var vehiculeID = vehicule.Id;
+
+            if(conducteur == null)
             {
                 Conducteur cond = new Conducteur()
                 {
@@ -97,9 +101,10 @@ namespace iCheckAPI.Controllers
                 };
 
                 await _conducteurRepo.Create(cond);
+                conducteurID = cond.Id;
             }
 
-            if(!vehicule)
+            if(vehicule == null)
             {
                 Vehicule vehi = new Vehicule()
                 {
@@ -108,11 +113,18 @@ namespace iCheckAPI.Controllers
                 };
 
                 await _vehiculeRepo.Create(vehi);
+                vehiculeID = vehi.Id;
             }
 
             await _checkListRepo.Create(checkList);
             System.Diagnostics.Debug.WriteLine(checkList.Id.ToString());
-            _context.CheckListRef.Add(new CheckListRef() { IdCheckListRef = checkList.Id.ToString() });
+
+            _context.CheckListRef.Add(new CheckListRef() { 
+                IdCheckListRef = checkList.Id.ToString(), 
+                Date = checkList.Date.Value.Date,
+                IdConducteur = conducteurID,
+                IdVehicule = vehiculeID
+            });
             _context.SaveChanges();
             return CreatedAtAction("GetCheckList", new { id = checkList.Id.ToString() }, checkList);
         }
@@ -135,7 +147,10 @@ namespace iCheckAPI.Controllers
             var conducteur = _conducteurRepo.GetConducteurByCIN(checkList.Conducteur["cin"]);
             var vehicule = _vehiculeRepo.GetVehiculeByMatricule(checkList.Vehicule["matricule"]);
 
-            if (!conducteur)
+            var conducteurID = conducteur.Id;
+            var vehiculeID = vehicule.Id;
+
+            if (conducteur == null)
             {
                 Conducteur cond = new Conducteur()
                 {
@@ -144,9 +159,10 @@ namespace iCheckAPI.Controllers
                 };
 
                 await _conducteurRepo.Create(cond);
+                conducteurID = cond.Id;
             }
 
-            if (!vehicule)
+            if (vehicule == null)
             {
                 Vehicule vehi = new Vehicule()
                 {
@@ -155,9 +171,20 @@ namespace iCheckAPI.Controllers
                 };
 
                 await _vehiculeRepo.Create(vehi);
+                vehiculeID = vehi.Id;
             }
 
             await _checkListRepo.Update(checkList);
+
+            CheckListRef checkListRef = _context.CheckListRef.FirstOrDefault(x => x.IdCheckListRef == checkList.Id.ToString());
+            checkListRef.Date = checkList.Date.Value.Date;
+            checkListRef.IdConducteur = conducteurID;
+            checkListRef.IdVehicule = vehiculeID;
+            checkListRef.IdCheckListRef = checkList.Id.ToString();
+
+            _context.Entry(checkListRef).State = EntityState.Modified;
+
+            _context.SaveChanges();
 
             return NoContent();
         }

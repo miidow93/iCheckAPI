@@ -14,9 +14,9 @@ namespace iCheckAPI.Repositories
         {
             _context = context;
         }
-        public bool GetVehiculeByMatricule(string matricule)
+        public Vehicule GetVehiculeByMatricule(string matricule)
         {
-            return _context.Vehicule.Any(x => x.Matricule == matricule);
+            return _context.Vehicule.FirstOrDefault(x => x.Matricule == matricule);
         }
 
         public int GetEnginByName(string nom)
@@ -45,7 +45,7 @@ namespace iCheckAPI.Repositories
 
     public interface IVehiculeRepo
     {
-        bool GetVehiculeByMatricule(string matricule);
+        Vehicule GetVehiculeByMatricule(string matricule);
 
         int GetEnginByName(string nom);
 

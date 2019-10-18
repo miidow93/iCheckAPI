@@ -40,9 +40,27 @@ namespace iCheckAPI.Models
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
+                entity.Property(e => e.Date)
+                    .HasColumnName("date")
+                    .HasColumnType("date");
+
                 entity.Property(e => e.IdCheckListRef)
                     .HasColumnName("idCheckListRef")
                     .IsUnicode(false);
+
+                entity.Property(e => e.IdConducteur).HasColumnName("idConducteur");
+
+                entity.Property(e => e.IdVehicule).HasColumnName("idVehicule");
+
+                entity.HasOne(d => d.IdConducteurNavigation)
+                    .WithMany(p => p.CheckListRef)
+                    .HasForeignKey(d => d.IdConducteur)
+                    .HasConstraintName("fk_idCond");
+
+                entity.HasOne(d => d.IdVehiculeNavigation)
+                    .WithMany(p => p.CheckListRef)
+                    .HasForeignKey(d => d.IdVehicule)
+                    .HasConstraintName("fk_idVehicule");
             });
 
             modelBuilder.Entity<Conducteur>(entity =>
