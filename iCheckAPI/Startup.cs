@@ -51,6 +51,7 @@ namespace iCheckAPI
             // services.AddScoped<ICheckListRepo, CheckListRepo>();
             services.AddScoped<IConducteurRepo, ConducteurRepo>();
             services.AddScoped<IVehiculeRepo, VehiculeRepo>();
+            services.AddScoped<ISiteRepo, SiteRepo>();
             // services.AddSingleton<IConducteurRepo, ConducteurRepo>();
             services.AddSingleton<CheckListRepo>();
 

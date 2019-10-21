@@ -19,6 +19,7 @@ namespace iCheckAPI.Models
         public virtual DbSet<Conducteur> Conducteur { get; set; }
         public virtual DbSet<Engins> Engins { get; set; }
         public virtual DbSet<Role> Role { get; set; }
+        public virtual DbSet<Site> Site { get; set; }
         public virtual DbSet<Societe> Societe { get; set; }
         public virtual DbSet<Users> Users { get; set; }
         public virtual DbSet<Vehicule> Vehicule { get; set; }
@@ -50,12 +51,19 @@ namespace iCheckAPI.Models
 
                 entity.Property(e => e.IdConducteur).HasColumnName("idConducteur");
 
+                entity.Property(e => e.IdSite).HasColumnName("idSite");
+
                 entity.Property(e => e.IdVehicule).HasColumnName("idVehicule");
 
                 entity.HasOne(d => d.IdConducteurNavigation)
                     .WithMany(p => p.CheckListRef)
                     .HasForeignKey(d => d.IdConducteur)
                     .HasConstraintName("fk_idCond");
+
+                entity.HasOne(d => d.IdSiteNavigation)
+                    .WithMany(p => p.CheckListRef)
+                    .HasForeignKey(d => d.IdSite)
+                    .HasConstraintName("fk_idSiteCheckListRef");
 
                 entity.HasOne(d => d.IdVehiculeNavigation)
                     .WithMany(p => p.CheckListRef)
@@ -134,6 +142,15 @@ namespace iCheckAPI.Models
                     .IsUnicode(false);
             });
 
+            modelBuilder.Entity<Site>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.Libelle)
+                    .HasColumnName("libelle")
+                    .HasMaxLength(50);
+            });
+
             modelBuilder.Entity<Societe>(entity =>
             {
                 entity.ToTable("societe");
@@ -159,6 +176,8 @@ namespace iCheckAPI.Models
 
                 entity.Property(e => e.IdRole).HasColumnName("idRole");
 
+                entity.Property(e => e.IdSite).HasColumnName("idSite");
+
                 entity.Property(e => e.NomComplet)
                     .HasColumnName("nomComplet")
                     .HasMaxLength(100)
@@ -178,6 +197,11 @@ namespace iCheckAPI.Models
                     .WithMany(p => p.Users)
                     .HasForeignKey(d => d.IdRole)
                     .HasConstraintName("FK__users__idrole__71D1E811");
+
+                entity.HasOne(d => d.IdSiteNavigation)
+                    .WithMany(p => p.Users)
+                    .HasForeignKey(d => d.IdSite)
+                    .HasConstraintName("fk_idSite");
             });
 
             modelBuilder.Entity<Vehicule>(entity =>

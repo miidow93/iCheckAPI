@@ -10,8 +10,10 @@ namespace iCheckAPI.Models
         public int? IdConducteur { get; set; }
         public int? IdVehicule { get; set; }
         public DateTime? Date { get; set; }
+        public int? IdSite { get; set; }
 
         public Conducteur IdConducteurNavigation { get; set; }
+        public Site IdSiteNavigation { get; set; }
         public Vehicule IdVehiculeNavigation { get; set; }
     }
 }

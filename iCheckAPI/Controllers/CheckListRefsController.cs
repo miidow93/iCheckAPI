@@ -26,6 +26,7 @@ namespace iCheckAPI.Controllers
         {
             return _context.CheckListRef.Include(v => v.IdVehiculeNavigation.IdEnginNavigation)
                                         .Include(c => c.IdConducteurNavigation)
+                                        .Include(s => s.IdSiteNavigation)
                                         .ToList();
         }
 

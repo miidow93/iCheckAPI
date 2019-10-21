@@ -11,7 +11,9 @@ namespace iCheckAPI.Models
         public string Email { get; set; }
         public string Password { get; set; }
         public int? IdRole { get; set; }
+        public int? IdSite { get; set; }
 
         public Role IdRoleNavigation { get; set; }
+        public Site IdSiteNavigation { get; set; }
     }
 }

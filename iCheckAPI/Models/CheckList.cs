@@ -25,6 +25,9 @@ namespace iCheckAPI.Models
         [BsonDateTimeOptions(DateOnly = false, Kind = DateTimeKind.Utc, Representation = BsonType.DateTime)]
         public DateTime? Date { get; set; }
 
+        [BsonElement("site")]
+        public string Site { get; set; }
+
         /*[BsonExtraElements]
         [BsonDictionaryOptions(DictionaryRepresentation.Document)]
         // [BsonDictionaryOptions(DictionaryRepresentation.ArrayOfArrays)]
