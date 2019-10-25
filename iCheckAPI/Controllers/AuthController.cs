@@ -58,11 +58,13 @@ namespace iCheckAPI.Controllers
             var token = tokenHandler.CreateToken(tokenDescriptor);
 
             var libelle = await GetRole(user.IdRole);
+            var site = await GetSite(user.IdSite);
 
             return Ok(new
             {
                 token = tokenHandler.WriteToken(token),
                 username = user.Username,
+                site = site,
                 role = libelle
             });
         }
@@ -75,6 +77,13 @@ namespace iCheckAPI.Controllers
             return role.Libelle;
         }
 
+        public async Task<string> GetSite(int? id)
+        {
+            var site = await _context.Site.FirstOrDefaultAsync(x => x.Id == id);
+            if (site == null)
+                return "null";
+            return site.Libelle;
+        }
     }
 
 }
