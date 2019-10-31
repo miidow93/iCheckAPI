@@ -96,9 +96,9 @@ namespace iCheckAPI.Controllers
             var vehicule = _vehiculeRepo.GetVehiculeByMatricule(checkList.Vehicule["matricule"]);
             var site = _siteRepo.GetSiteByLibelle(checkList.Site);
 
-            var conducteurID = conducteur.Id;
-            var vehiculeID = vehicule.Id;
-            var siteID = site.Id;
+            var conducteurID = conducteur != null ? conducteur.Id : -1;
+            var vehiculeID = vehicule != null ? vehicule.Id : -1;
+            var siteID = site != null ? site.Id : -1;
 
             if(conducteur == null)
             {
