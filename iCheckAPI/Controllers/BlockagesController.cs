@@ -24,7 +24,8 @@ namespace iCheckAPI.Controllers
         [HttpGet]
         public IEnumerable<Blockage> GetBlockage()
         {
-            return _context.Blockage.Include(x => x.IdVehiculeNavigation);
+            return _context.Blockage.Include(x => x.IdVehiculeNavigation.Blockage)
+                                    .Include(c => c.IdVehiculeNavigation.CheckListRef);
         }
 
         // GET: api/Blockages/5
