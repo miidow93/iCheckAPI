@@ -7,6 +7,7 @@ namespace iCheckAPI.Models
     {
         public Vehicule()
         {
+            Blockage = new HashSet<Blockage>();
             CheckListRef = new HashSet<CheckListRef>();
         }
 
@@ -15,6 +16,7 @@ namespace iCheckAPI.Models
         public int? IdEngin { get; set; }
 
         public Engins IdEnginNavigation { get; set; }
+        public ICollection<Blockage> Blockage { get; set; }
         public ICollection<CheckListRef> CheckListRef { get; set; }
     }
 }

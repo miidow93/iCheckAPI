@@ -15,6 +15,7 @@ namespace iCheckAPI.Models
         {
         }
 
+        public virtual DbSet<Blockage> Blockage { get; set; }
         public virtual DbSet<CheckListRef> CheckListRef { get; set; }
         public virtual DbSet<Conducteur> Conducteur { get; set; }
         public virtual DbSet<Engins> Engins { get; set; }
@@ -35,6 +36,34 @@ namespace iCheckAPI.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Blockage>(entity =>
+            {
+                entity.ToTable("blockage");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.DateBlockage)
+                    .HasColumnName("dateBlockage")
+                    .HasColumnType("date");
+
+                entity.Property(e => e.DateDeblockage)
+                    .HasColumnName("dateDeblockage")
+                    .HasColumnType("date");
+
+                entity.Property(e => e.IdVehicule).HasColumnName("idVehicule");
+
+                entity.Property(e => e.ImageUrl)
+                    .HasColumnName("imageUrl")
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Motif).HasColumnName("motif");
+
+                entity.HasOne(d => d.IdVehiculeNavigation)
+                    .WithMany(p => p.Blockage)
+                    .HasForeignKey(d => d.IdVehicule)
+                    .HasConstraintName("fk_idVehiculeBlockage");
+            });
+
             modelBuilder.Entity<CheckListRef>(entity =>
             {
                 entity.ToTable("checkListRef");

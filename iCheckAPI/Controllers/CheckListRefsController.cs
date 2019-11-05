@@ -30,6 +30,16 @@ namespace iCheckAPI.Controllers
                                         .ToList();
         }
 
+        [HttpGet("blocked")]
+        public IEnumerable<CheckListRef> GetCheckListRefBlocked()
+        {
+            return _context.CheckListRef.Include(v => v.IdVehiculeNavigation.IdEnginNavigation)
+                                        .Include(c => c.IdConducteurNavigation)
+                                        .Include(s => s.IdSiteNavigation)
+                                        .Where(x => x.Etat == true)
+                                        .ToList();
+        }
+
         // GET: api/CheckListRefs/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetCheckListRef([FromRoute] int id)

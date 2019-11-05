@@ -148,6 +148,19 @@ namespace iCheckAPI.Controllers
                 IdVehicule = vehiculeID,
                 IdSite = siteID
             }) ;
+
+
+            if(checkList.Etat)
+            {
+                var blockage = new Blockage()
+                {
+                    IdVehicule = vehiculeID,
+                    DateBlockage = checkList.Date.Value.Date,
+                };
+
+                _context.Blockage.Add(blockage);
+            }
+
             _context.SaveChanges();
             return CreatedAtAction("GetCheckList", new { id = checkList.Id.ToString() }, checkList);
         }
