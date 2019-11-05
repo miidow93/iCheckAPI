@@ -142,6 +142,8 @@ namespace iCheckAPI.Controllers
             {
                 IdCheckListRef = checkList.Id.ToString(),
                 Date = checkList.Date.Value.Date,
+                Rating = checkList.Rating,
+                Etat = checkList.Etat,
                 IdConducteur = conducteurID,
                 IdVehicule = vehiculeID,
                 IdSite = siteID

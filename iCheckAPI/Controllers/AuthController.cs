@@ -58,13 +58,13 @@ namespace iCheckAPI.Controllers
             var token = tokenHandler.CreateToken(tokenDescriptor);
 
             var libelle = await GetRole(user.IdRole);
-            var site = await GetSite(user.IdSite);
+            var location = await GetSite(user.IdSite);
 
             return Ok(new
             {
                 token = tokenHandler.WriteToken(token),
                 username = user.Username,
-                site = site,
+                site = location,
                 role = libelle
             });
         }

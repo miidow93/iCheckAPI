@@ -1,4 +1,4 @@
 .vs/
-iCheckAPI/bin/
-iCheckAPI/obj/
-iCheckAPI/Properties/
+iCheckAPI/bin/*
+iCheckAPI/obj/*
+iCheckAPI/Properties/*

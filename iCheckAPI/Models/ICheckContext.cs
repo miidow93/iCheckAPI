@@ -29,7 +29,7 @@ namespace iCheckAPI.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Data Source=.;Initial Catalog=iCheck; Integrated Security=True;");
+                optionsBuilder.UseSqlServer("data source=.; initial catalog=iCheck; integrated security=true");
             }
         }
 
@@ -45,6 +45,8 @@ namespace iCheckAPI.Models
                     .HasColumnName("date")
                     .HasColumnType("date");
 
+                entity.Property(e => e.Etat).HasColumnName("etat");
+
                 entity.Property(e => e.IdCheckListRef)
                     .HasColumnName("idCheckListRef")
                     .IsUnicode(false);
@@ -54,6 +56,8 @@ namespace iCheckAPI.Models
                 entity.Property(e => e.IdSite).HasColumnName("idSite");
 
                 entity.Property(e => e.IdVehicule).HasColumnName("idVehicule");
+
+                entity.Property(e => e.Rating).HasColumnName("rating");
 
                 entity.HasOne(d => d.IdConducteurNavigation)
                     .WithMany(p => p.CheckListRef)

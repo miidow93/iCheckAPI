@@ -28,6 +28,12 @@ namespace iCheckAPI.Models
         [BsonElement("site")]
         public string Site { get; set; }
 
+        [BsonElement("rating")]
+        public double Rating { get; set; }
+
+        [BsonElement("etat")]
+        public bool Etat { get; set; }
+
         /*[BsonExtraElements]
         [BsonDictionaryOptions(DictionaryRepresentation.Document)]
         // [BsonDictionaryOptions(DictionaryRepresentation.ArrayOfArrays)]
