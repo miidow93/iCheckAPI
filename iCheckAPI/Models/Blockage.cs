@@ -11,6 +11,7 @@ namespace iCheckAPI.Models
         public string Motif { get; set; }
         public DateTime? DateDeblockage { get; set; }
         public string ImageUrl { get; set; }
+        public string IdCheckList { get; set; }
 
         public Vehicule IdVehiculeNavigation { get; set; }
     }

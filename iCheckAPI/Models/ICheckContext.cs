@@ -50,6 +50,10 @@ namespace iCheckAPI.Models
                     .HasColumnName("dateDeblockage")
                     .HasColumnType("date");
 
+                entity.Property(e => e.IdCheckList)
+                    .HasColumnName("idCheckList")
+                    .IsUnicode(false);
+
                 entity.Property(e => e.IdVehicule).HasColumnName("idVehicule");
 
                 entity.Property(e => e.ImageUrl)
