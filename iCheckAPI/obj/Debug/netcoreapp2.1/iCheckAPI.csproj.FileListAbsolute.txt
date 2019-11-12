@@ -38,7 +38,6 @@ D:\ATSProject\iCheckAPI\iCheckAPI\bin\Debug\netcoreapp2.1\iCheckAPI.runtimeconfi
 D:\ATSProject\iCheckAPI\iCheckAPI\bin\Debug\netcoreapp2.1\iCheckAPI.runtimeconfig.dev.json
 D:\ATSProject\iCheckAPI\iCheckAPI\bin\Debug\netcoreapp2.1\iCheckAPI.dll
 D:\ATSProject\iCheckAPI\iCheckAPI\bin\Debug\netcoreapp2.1\iCheckAPI.pdb
-D:\ATSProject\iCheckAPI\iCheckAPI\obj\Debug\netcoreapp2.1\iCheckAPI.csprojAssemblyReference.cache
 D:\ATSProject\iCheckAPI\iCheckAPI\obj\Debug\netcoreapp2.1\iCheckAPI.RazorAssemblyInfo.cache
 D:\ATSProject\iCheckAPI\iCheckAPI\obj\Debug\netcoreapp2.1\iCheckAPI.RazorAssemblyInfo.cs
 D:\ATSProject\iCheckAPI\iCheckAPI\obj\Debug\netcoreapp2.1\iCheckAPI.AssemblyInfoInputs.cache

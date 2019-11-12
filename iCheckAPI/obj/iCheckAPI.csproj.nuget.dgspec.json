@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Repos\\Api\\iCheckAPI\\iCheckAPI\\iCheckAPI.csproj": {}
+    "D:\\ATSProject\\iCheckAPI\\iCheckAPI\\iCheckAPI.csproj": {}
   },
   "projects": {
-    "D:\\Repos\\Api\\iCheckAPI\\iCheckAPI\\iCheckAPI.csproj": {
+    "D:\\ATSProject\\iCheckAPI\\iCheckAPI\\iCheckAPI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Repos\\Api\\iCheckAPI\\iCheckAPI\\iCheckAPI.csproj",
+        "projectUniqueName": "D:\\ATSProject\\iCheckAPI\\iCheckAPI\\iCheckAPI.csproj",
         "projectName": "iCheckAPI",
-        "projectPath": "D:\\Repos\\Api\\iCheckAPI\\iCheckAPI\\iCheckAPI.csproj",
-        "packagesPath": "C:\\Users\\Mohammed Jellab\\.nuget\\packages\\",
-        "outputPath": "D:\\Repos\\Api\\iCheckAPI\\iCheckAPI\\obj\\",
+        "projectPath": "D:\\ATSProject\\iCheckAPI\\iCheckAPI\\iCheckAPI.csproj",
+        "packagesPath": "C:\\Users\\Abdeladem Biyi\\.nuget\\packages\\",
+        "outputPath": "D:\\ATSProject\\iCheckAPI\\iCheckAPI\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Mohammed Jellab\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Abdeladem Biyi\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
