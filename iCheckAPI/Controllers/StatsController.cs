@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using iCheckAPI.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Globalization;
+using Microsoft.EntityFrameworkCore;
 
 namespace iCheckAPI.Controllers
 {
@@ -21,7 +23,7 @@ namespace iCheckAPI.Controllers
 
         public StatsController(ICheckContext context)
         {
-            context = _context;
+            _context = context;
         }
         // GET: api/Stats
         [HttpGet("synthese/{type}")]
@@ -32,13 +34,17 @@ namespace iCheckAPI.Controllers
 
         // GET: api/Stats/5
         [HttpGet("synthese/total")]
-        public string GetStatsSynthese()
+        public async Task<IActionResult> GetStatsSyntheseByMonth()
         {
-            return "value";
+            var monthStats = await _context.CheckListRef.Where(w => w.Date.Value.Month == DateTime.Now.Month)
+                                               .GroupBy(g => g.Date.Value.Day)
+                                               .Select(s => new { label = s.Key, count = s.Count() }).ToListAsync();
+            //return _context.CheckListRef.Count();
+            return Ok(new { stats = monthStats });
         }
 
         // GET: api/Stats/5
-        [HttpGet("synthese/total")]
+        [HttpGet("synthese/totals")]
         public string GetStatscamions()
         {
             return "value";
@@ -46,8 +52,13 @@ namespace iCheckAPI.Controllers
 
         // POST: api/Stats
         [HttpGet("{site}")]
-        public void GetStatsSuspendedCamionsBySite([FromRoute] string site)
+        public async Task<IActionResult> GetStatsSuspendedCamionsBySite()
         {
+            var monthStats = await _context.CheckListRef.Where(w => w.Date.Value.Month == DateTime.Now.Month && w.Etat == true)
+                                               .GroupBy(g => g.Date.Value.Day)
+                                               .Select(s => new { label = s.Key, count = s.Count() }).ToListAsync();
+            //return _context.CheckListRef.Count();
+            return Ok(new { stats = monthStats });
         }
     }
 }
