@@ -45,3 +45,4 @@ D:\ATSProject\iCheckAPI\iCheckAPI\obj\Debug\netcoreapp2.1\iCheckAPI.AssemblyInfo
 D:\ATSProject\iCheckAPI\iCheckAPI\obj\Debug\netcoreapp2.1\iCheckAPI.RazorTargetAssemblyInfo.cache
 D:\ATSProject\iCheckAPI\iCheckAPI\obj\Debug\netcoreapp2.1\iCheckAPI.dll
 D:\ATSProject\iCheckAPI\iCheckAPI\obj\Debug\netcoreapp2.1\iCheckAPI.pdb
+D:\ATSProject\iCheckAPI\iCheckAPI\obj\Debug\netcoreapp2.1\iCheckAPI.csprojAssemblyReference.cache
