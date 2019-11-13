@@ -85,6 +85,7 @@ namespace iCheckAPI.Controllers
                 Date = checkList.Date,
                 CatchAll = BsonDocument.Parse(checkList.CatchAll.ToString())
             };*/
+            var blockage = new Blockage();
 
             var jsonDoc = JsonConvert.SerializeObject(checkList.CatchAll);
 
@@ -99,6 +100,7 @@ namespace iCheckAPI.Controllers
             var conducteurID = conducteur != null ? conducteur.Id : -1;
             var vehiculeID = vehicule != null ? vehicule.Id : -1;
             var siteID = site != null ? site.Id : -1;
+            var blockageID = -1;
 
             if(conducteur == null)
             {
@@ -135,6 +137,9 @@ namespace iCheckAPI.Controllers
                 siteID = st.Id;
             }
 
+            checkList.Vehicule["idVehicule"] = vehiculeID.ToString();
+            checkList.Conducteur["idConducteur"] = conducteurID.ToString();
+
             await _checkListRepo.Create(checkList);
             System.Diagnostics.Debug.WriteLine(checkList.Id.ToString());
 
@@ -152,16 +157,14 @@ namespace iCheckAPI.Controllers
 
             if(checkList.Etat)
             {
-                var blockage = new Blockage()
-                {
-                    IdVehicule = vehiculeID,
-                    DateBlockage = checkList.Date.Value.Date,
-                };
-
-                _context.Blockage.Add(blockage);
+                blockage.IdVehicule = vehiculeID;
+                blockage.DateBlockage = checkList.Date.Value.Date;
+                blockage.IdCheckList = checkList.Id;
             }
-
+            _context.Blockage.Add(blockage);
             _context.SaveChanges();
+            checkList.Vehicule["idBlockage"] = blockage.IdVehicule != null ? blockage.Id.ToString() : "-1";
+            System.Diagnostics.Debug.WriteLine("BlockageID:" + blockageID);
             return CreatedAtAction("GetCheckList", new { id = checkList.Id.ToString() }, checkList);
         }
 
