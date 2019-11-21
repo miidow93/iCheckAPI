@@ -73,9 +73,13 @@ namespace iCheckAPI.Controllers
             }
             else
             {
-                System.Diagnostics.Debug.WriteLine("Base64");
-                var imagePath = ConvertImage(blockage.ImageUrl);
-                blockage.ImageUrl = imagePath;
+                if(blockage.ImageUrl != "")
+                {
+                    System.Diagnostics.Debug.WriteLine("Base64");
+                    var imagePath = ConvertImage(blockage.ImageUrl);
+                    blockage.ImageUrl = imagePath;
+                }
+                
             }
 
 
