@@ -60,6 +60,7 @@ namespace iCheckAPI.Controllers
             //return _context.CheckListRef.Count();
             return Ok(new { stats = monthStats });
         }
+
         // GET: api/Stats
         [HttpGet("suspendu")]
         public int  NomberSuspendedCamions()
