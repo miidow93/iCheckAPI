@@ -5,7 +5,7 @@ namespace iCheckAPI.Models
 {
     public partial class Conducteur
     {
-        public Conducteur()
+       public Conducteur()
         {
             CheckListRef = new HashSet<CheckListRef>();
         }

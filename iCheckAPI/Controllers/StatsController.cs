@@ -50,15 +50,39 @@ namespace iCheckAPI.Controllers
             return "value";
         }
 
-        // POST: api/Stats
+        // GET: api/Stats
         [HttpGet("{site}")]
-        public async Task<IActionResult> GetStatsSuspendedCamionsBySite()
+        public async Task<IActionResult> GetStatsSuspendedCamionsBySite([FromRoute] string site)
         {
-            var monthStats = await _context.CheckListRef.Where(w => w.Date.Value.Month == DateTime.Now.Month && w.Etat == true)
+            var monthStats = await _context.CheckListRef.Where(w => w.Date.Value.Month == DateTime.Now.Month && w.Etat == true && w.IdSiteNavigation.Libelle == site)
                                                .GroupBy(g => g.Date.Value.Day)
                                                .Select(s => new { label = s.Key, count = s.Count() }).ToListAsync();
             //return _context.CheckListRef.Count();
             return Ok(new { stats = monthStats });
+        }
+
+        // GET: api/Stats
+        [HttpGet("suspendu")]
+        public int  NomberSuspendedCamions()
+        {
+            var a = _context.CheckListRef.Where(w => w.Etat == true).Count();
+            return a;
+        }
+
+        // GET: api/Stats
+        [HttpGet("Nonsuspendu")]
+        public int NomberNonSuspendedCamions()
+        {
+            var a = _context.CheckListRef.Where(w => w.Etat == false).Count();
+            return a;
+        }
+
+        // GET: api/Stats
+        [HttpGet("controled")]
+        public int NomberCamions()
+        {
+            var a = _context.CheckListRef.Count();
+            return a;
         }
     }
 }
