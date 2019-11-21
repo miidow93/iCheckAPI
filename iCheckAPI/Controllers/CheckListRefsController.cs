@@ -21,13 +21,29 @@ namespace iCheckAPI.Controllers
         }
 
         // GET: api/CheckListRefs
+        //[HttpGet]
+        //public IEnumerable<CheckListRef> GetCheckListRef()
+        //{
+        //    return _context.CheckListRef.Include(v => v.IdVehiculeNavigation.IdEnginNavigation)
+        //                                .Include(c => c.IdConducteurNavigation)
+        //                                .Include(s => s.IdSiteNavigation)
+        //                                .ToList();
+        //}
+
         [HttpGet]
-        public IEnumerable<CheckListRef> GetCheckListRef()
+        public async Task<IEnumerable<Object>> GetCheckListRef()
         {
-            return _context.CheckListRef.Include(v => v.IdVehiculeNavigation.IdEnginNavigation)
-                                        .Include(c => c.IdConducteurNavigation)
-                                        .Include(s => s.IdSiteNavigation)
-                                        .ToList();
+            return await _context.CheckListRef.Select(s => new
+            {
+                s.Id,
+                s.IdConducteurNavigation.NomComplet,
+                s.IdVehiculeNavigation.Matricule,
+                s.IdVehiculeNavigation.IdEnginNavigation.NomEngin,
+                s.Date,
+                s.Etat,
+                s.Rating
+            }).ToListAsync();
+                                       
         }
 
         [HttpGet("blocked")]
