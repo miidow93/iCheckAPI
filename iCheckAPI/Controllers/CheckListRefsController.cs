@@ -36,6 +36,7 @@ namespace iCheckAPI.Controllers
             return await _context.CheckListRef.Select(s => new
             {
                 s.Id,
+                s.IdCheckListRef,
                 s.IdConducteurNavigation.NomComplet,
                 s.IdVehiculeNavigation.Matricule,
                 s.IdVehiculeNavigation.IdEnginNavigation.NomEngin,
