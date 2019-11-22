@@ -37,6 +37,9 @@ namespace iCheckAPI.Controllers
             {
                 s.Id,
                 s.IdCheckListRef,
+                s.IdConducteur,
+                s.IdVehicule,
+                s.IdSite,
                 s.IdConducteurNavigation.NomComplet,
                 s.IdVehiculeNavigation.Matricule,
                 s.IdVehiculeNavigation.IdEnginNavigation.NomEngin,
@@ -80,6 +83,8 @@ namespace iCheckAPI.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutCheckListRef([FromRoute] int id, [FromBody] CheckListRef checkListRef)
         {
+            Blockage blockage = new Blockage();
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -91,6 +96,30 @@ namespace iCheckAPI.Controllers
             }
 
             _context.Entry(checkListRef).State = EntityState.Modified;
+
+
+            blockage.IdVehicule = checkListRef.IdVehicule;
+            blockage.DateBlockage = checkListRef.Date.Value.Date;
+            blockage.IdCheckList = checkListRef.IdCheckListRef;
+
+            if (!(bool)checkListRef.Etat)
+            {
+                
+                // _context.Entry(blockage).State = EntityState.Modified;
+                var blockageUpdated = await _context.Blockage.FirstOrDefaultAsync(x => x.IdCheckList == blockage.IdCheckList);
+                if(blockageUpdated != null)
+                {
+                    blockageUpdated.DateDeblockage = DateTime.Now.Date;
+                    // blockageUpdated = blockage;
+                    System.Diagnostics.Debug.WriteLine("Updated: " + blockageUpdated.IdCheckList + ", " + blockageUpdated.Id);
+                }
+            } else
+            {
+                if ((bool)checkListRef.Etat)
+                {
+                    _context.Blockage.Add(blockage);
+                }
+            } 
 
             try
             {

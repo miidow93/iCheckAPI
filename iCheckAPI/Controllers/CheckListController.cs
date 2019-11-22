@@ -160,8 +160,9 @@ namespace iCheckAPI.Controllers
                 blockage.IdVehicule = vehiculeID;
                 blockage.DateBlockage = checkList.Date.Value.Date;
                 blockage.IdCheckList = checkList.Id;
+                _context.Blockage.Add(blockage);
             }
-            _context.Blockage.Add(blockage);
+           
             _context.SaveChanges();
             checkList.Vehicule["idBlockage"] = blockage.IdVehicule != null ? blockage.Id.ToString() : "-1";
             System.Diagnostics.Debug.WriteLine("BlockageID:" + blockageID);
