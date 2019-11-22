@@ -63,23 +63,30 @@ namespace iCheckAPI.Controllers
 
         // GET: api/Stats
         [HttpGet("suspendu")]
-        public int  NomberSuspendedCamions()
+        public async Task<IActionResult> NomberSuspendedCamions()
         {
-            var a = _context.CheckListRef.Where(w => w.Etat == true).Count();
-            return a;
+            var a = await _context.CheckListRef.Where(w => w.Etat == true).GroupBy(g => g.IdSiteNavigation.Libelle).Select(s => new { label = s.Key, count = s.Count() }).ToListAsync();
+            return Ok(new { stats = a });
         }
 
         // GET: api/Stats
         [HttpGet("Nonsuspendu")]
-        public int NomberNonSuspendedCamions()
+        public async Task<IActionResult> NomberNonSuspendedCamions()
         {
-            var a = _context.CheckListRef.Where(w => w.Etat == false).Count();
-            return a;
+            var a = await _context.CheckListRef.Where(w => w.Etat == false).GroupBy(g => g.IdSiteNavigation.Libelle).Select(s => new { label = s.Key, count = s.Count() }).ToListAsync();
+            return Ok(new { stats = a });
         }
 
         // GET: api/Stats
+        [HttpGet("controledSite")]
+        public async Task<IActionResult> NomberCamionsSite()
+        {
+            var a = await _context.CheckListRef.GroupBy(g => g.IdSiteNavigation.Libelle).Select(s => new { label = s.Key, count = s.Count() }).ToListAsync();
+            return Ok(new { stats = a });
+        }
+        // GET: api/Stats
         [HttpGet("controled")]
-        public int NomberCamions()
+        public int NomberCamion()
         {
             var a = _context.CheckListRef.Count();
             return a;
