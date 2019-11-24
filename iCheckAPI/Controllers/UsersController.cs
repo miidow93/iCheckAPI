@@ -22,9 +22,16 @@ namespace iCheckAPI.Controllers
 
         // GET: api/Users
         [HttpGet]
-        public IEnumerable<Users> GetUsers()
+        public async Task<IEnumerable<Object>> GetUsers()
         {
-            return _context.Users;
+            return _context.Users.Select(x => new
+            {
+                x.Id,
+                x.NomComplet,
+                x.Username,
+                role = x.IdRoleNavigation.Libelle,
+                site = x.IdSiteNavigation.Libelle
+            });
         }
 
         // GET: api/Users/5

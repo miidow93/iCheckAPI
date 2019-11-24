@@ -26,7 +26,7 @@ namespace iCheckAPI
             WebHost.CreateDefaultBuilder(args)
                 // .UseUrls(urls)
                 .UseKestrel()
-                // .UseIISIntegration()
+                .UseIISIntegration()
                 .UseStartup<Startup>();
     }
 }
