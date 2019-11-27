@@ -43,13 +43,6 @@ namespace iCheckAPI.Controllers
             return Ok(new { stats = monthStats });
         }
 
-        // GET: api/Stats/5
-        [HttpGet("synthese/totals")]
-        public string GetStatsCamions()
-        {
-            return "value";
-        }
-
         // GET: api/Stats
         [HttpGet("{site}")]
         public async Task<IActionResult> GetStatsSuspendedCamionsBySite([FromRoute] string site)
@@ -73,8 +66,17 @@ namespace iCheckAPI.Controllers
         [HttpGet("Nonsuspendu")]
         public async Task<IActionResult> NomberNonSuspendedCamions()
         {
-            var a = await _context.CheckListRef.Where(w => w.Etat == false).GroupBy(g => g.IdSiteNavigation.Libelle).Select(s => new { label = s.Key, count = s.Count() }).ToListAsync();
+            var a = await _context.CheckListRef.Where(w => w.Etat == false).GroupBy(g => new { g.IdSiteNavigation.Libelle, g.IdVehiculeNavigation.IdEnginNavigation.NomEngin }).Select(s => new { label = s.Key.Libelle, type= s.Key.NomEngin, count = s.Count() }).ToListAsync();
             return Ok(new { stats = a });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetStats()
+        {
+            var suspended = await _context.CheckListRef.Where(w => w.Etat == true).GroupBy(g => new { g.IdSiteNavigation.Libelle, g.IdVehiculeNavigation.IdEnginNavigation.NomEngin }).Select(s => new { label = s.Key.Libelle, type = s.Key.NomEngin, count = s.Count() }).ToListAsync();
+            var notSuspended = await _context.CheckListRef.Where(w => w.Etat == false).GroupBy(g => new { g.IdSiteNavigation.Libelle, g.IdVehiculeNavigation.IdEnginNavigation.NomEngin }).Select(s => new { label = s.Key.Libelle, type = s.Key.NomEngin, count = s.Count() }).ToListAsync();
+
+            return Ok(new { blocked = suspended, notBlocked = notSuspended });
         }
 
         // GET: api/Stats
