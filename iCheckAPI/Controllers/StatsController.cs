@@ -15,7 +15,7 @@ namespace iCheckAPI.Controllers
     public class StatsController : ControllerBase
     {
 
-        
+
         // synthese mensuel des camions par type 
         // synthese mensuel des camions.
         // nombre des camions suspendus par site + nombre total des camions controlés
@@ -65,7 +65,7 @@ namespace iCheckAPI.Controllers
         [HttpGet("suspendu")]
         public async Task<IActionResult> NomberSuspendedCamions()
         {
-            var a = await _context.CheckListRef.Where(w => w.Etat == true).GroupBy(g => g.IdSiteNavigation.Libelle).Select(s => new { label = s.Key, count = s.Count() }).ToListAsync();
+            var a = await _context.CheckListRef.Where(w => w.Etat == true).GroupBy(g => new { g.IdSiteNavigation.Libelle, g.IdVehiculeNavigation.IdEnginNavigation.NomEngin }).Select(s => new { label = s.Key.Libelle, type = s.Key.NomEngin, count = s.Count() }).ToListAsync();
             return Ok(new { stats = a });
         }
 
