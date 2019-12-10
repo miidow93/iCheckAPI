@@ -28,8 +28,8 @@ namespace iCheckAPI.Controllers
             {
                 x.Id,
                 x.NomComplet,
-                x.Username,
-                role = x.IdRoleNavigation.Libelle,
+                x.UserName,
+                role = x.IdroleNavigation.Libelle,
                 site = x.IdSiteNavigation.Libelle
             });
         }

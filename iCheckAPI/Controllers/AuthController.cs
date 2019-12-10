@@ -28,7 +28,7 @@ namespace iCheckAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> LoginAsync(Users userLogin)
         {
-            var user = _context.Users.FirstOrDefault((x) => ((x.Username == userLogin.Username || x.Email == userLogin.Username) && x.Password == userLogin.Password));
+            var user = _context.Users.FirstOrDefault((x) => ((x.UserName == userLogin.UserName || x.Email == userLogin.UserName) && x.Password == userLogin.Password));
             // var user = _context.Users.Where(x => (x.Username == userLogin.Username || x.Email == userLogin.Email))
             if (user == null)
                 return Ok(new { message = "Username ou mot de passe incorrect" });
@@ -42,7 +42,7 @@ namespace iCheckAPI.Controllers
             var claims = new[]
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Name, user.Username)
+                new Claim(ClaimTypes.Name, user.UserName)
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetSection("AppSettings:Token").Value));
@@ -57,13 +57,13 @@ namespace iCheckAPI.Controllers
             var tokenHandler = new JwtSecurityTokenHandler();
             var token = tokenHandler.CreateToken(tokenDescriptor);
 
-            var libelle = await GetRole(user.IdRole);
+            var libelle = await GetRole(user.Idrole);
             var location = await GetSite(user.IdSite);
 
             return Ok(new
             {
                 token = tokenHandler.WriteToken(token),
-                username = user.Username,
+                username = user.UserName,
                 site = location,
                 role = libelle
             });

@@ -55,11 +55,14 @@ namespace iCheckAPI.Controllers
         }
 
         // GET: api/Stats
-        [HttpGet("suspendu")]
-        public async Task<IActionResult> NomberSuspendedCamions()
+        [HttpGet("suspendu/{type}")]
+        public async Task<IActionResult> NomberSuspendedCamions(string type)
         {
-            var a = await _context.CheckListRef.Where(w => w.Etat == true).GroupBy(g => new { g.IdSiteNavigation.Libelle, g.IdVehiculeNavigation.IdEnginNavigation.NomEngin }).Select(s => new { label = s.Key.Libelle, type = s.Key.NomEngin, count = s.Count() }).ToListAsync();
-            return Ok(new { stats = a });
+            /*var a = await _context.CheckListRef.Where(w => w.Etat == true)
+                .GroupBy(g => new { g.IdSiteNavigation.Libelle, g.IdVehiculeNavigation.IdEnginNavigation.NomEngin }).
+                Select(s => new { label = s.Key.Libelle, type = s.Key.NomEngin, count = s.Count() }).ToListAsync();*/
+            var a = await _context.Set<VM_GetCamionByStats>().FromSql($"getEnginByStatus {type}").ToListAsync();
+            return new JsonResult(a);
         }
 
         // GET: api/Stats
