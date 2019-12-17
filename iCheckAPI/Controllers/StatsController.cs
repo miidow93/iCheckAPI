@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Globalization;
 using Microsoft.EntityFrameworkCore;
+using System.Dynamic;
 
 namespace iCheckAPI.Controllers
 {
@@ -88,7 +89,67 @@ namespace iCheckAPI.Controllers
 
             var listUnion = notSuspended.Union(suspended);
 
-            return Ok(new { stats = listUnion });
+            var sites = _context.Site.Select(x => new SiteDTO { Label = x.Libelle });
+
+            var mapped = listUnion.Select(x =>
+            {
+                var data = new Stats();
+                data.Label = x.label;
+                data.Type = x.type;
+                if (x.etat == "blocked")
+                {
+                    data.BlockedCount = x.count;
+                }
+                else
+                {
+                    data.NotBlockedCount = x.count;
+                }
+                return data;
+            }).Aggregate(new List<Stats>(), (m, o) =>
+            {
+                /*var dict = (IDictionary<string, object>)m;
+                var dict2 = (IDictionary<string, object>)o;
+                System.Diagnostics.Debug.WriteLine("M " + dict["label"]); 
+                System.Diagnostics.Debug.WriteLine("O " + dict2["label"]);*/
+                // System.Diagnostics.Debug.WriteLine("M " + m[0].Label);
+                if (m.Count >= 0)
+                {
+                    System.Diagnostics.Debug.WriteLine("Count M: " + m.Count);
+                    //var eoAsDict = ((IDictionary<string, object>)o);
+                    System.Diagnostics.Debug.WriteLine("Type: " + o.Type);
+                    /*foreach(var kvp in eoAsDict)
+                    {
+                        System.Diagnostics.Debug.WriteLine("Property {0} equals {1}", kvp.Key, kvp.Value);
+                    }*/
+                    var found = m.Find(p =>
+                    {
+                        // System.Diagnostics.Debug.WriteLine("Find P: " + p.Type + ", O: " + o.Type);
+                        return p.Label == o.Label && p.Type == o.Type;
+                    });
+
+                    if (found != null)
+                    {
+                        System.Diagnostics.Debug.WriteLine("Found: " + found.Label);
+                        found.BlockedCount = found.BlockedCount != null ? found.BlockedCount + (o.BlockedCount != null ? o.BlockedCount : 0) : (o.BlockedCount != null ? o.BlockedCount : 0);
+                        found.NotBlockedCount = found.NotBlockedCount != null ? found.NotBlockedCount + (o.NotBlockedCount != null ? o.NotBlockedCount : 0) : (o.NotBlockedCount != null ? o.NotBlockedCount : 0);
+                    }
+                    else
+                    {
+                        o.BlockedCount = o.BlockedCount ?? 0;
+                        o.NotBlockedCount = o.NotBlockedCount ?? 0;
+                        m.Add(o);
+                    }
+                }
+                return m;
+            });
+
+            var benne = Factorization(sites, mapped, "Benne");
+            var plateau = Factorization(sites, mapped, "Plateau");
+            var citerne = Factorization(sites, mapped, "Citerne");
+
+
+
+            return Ok(new { bennes = benne, citernes = citerne, plateaus = plateau });
         }
 
         // GET: api/Stats
@@ -105,5 +166,47 @@ namespace iCheckAPI.Controllers
             var a = _context.CheckListRef.Count();
             return a;
         }
+
+
+        private List<Stats> Factorization(IQueryable<SiteDTO> sites, List<Stats> stats, string type)
+        {
+            var res = new List<Stats>();
+            // var index = 0;
+            foreach (var site in sites)
+            {
+                var stat = new Stats();
+                stat.Label = site.Label;
+                stat.Type = type;
+                System.Diagnostics.Debug.WriteLine("Site P: " + site.Label);
+                var found = stats.Find(x => x.Label == site.Label && x.Type == type);
+                if (found != null)
+                {
+                    stat.BlockedCount = found.BlockedCount;
+                    stat.NotBlockedCount = found.NotBlockedCount;
+                }
+                else
+                {
+                    stat.BlockedCount = 0;
+                    stat.NotBlockedCount = 0;
+                }
+                // index++;
+                res.Add(stat);
+                System.Diagnostics.Debug.WriteLine("Count P: " + res.Count);
+            }
+            return res;
+        }
+    }
+
+    internal class Stats
+    {
+        public string Label { get; set; }
+        public string Type { get; set; }
+        public int? BlockedCount { get; set; }
+        public int? NotBlockedCount { get; set; }
+    }
+
+    internal class SiteDTO
+    {
+        public string Label { get; set; }
     }
 }
