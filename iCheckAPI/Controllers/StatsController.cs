@@ -78,18 +78,20 @@ namespace iCheckAPI.Controllers
         public async Task<IActionResult> GetStats()
         {
             var suspended = await _context.CheckListRef
-                .Where(w => w.Etat == true && new[] { "Plateau", "Benne", "Citerne" }.Contains(w.IdVehiculeNavigation.IdEnginNavigation.NomEngin))
+                .Where(w => w.Etat != null && w.Etat == true && !string.IsNullOrEmpty(w.IdSiteNavigation.Libelle) && !string.IsNullOrEmpty(w.IdVehiculeNavigation.IdEnginNavigation.NomEngin) && new[] { "Plateau", "Benne", "Citerne" }
+                .Contains(w.IdVehiculeNavigation.IdEnginNavigation.NomEngin))
                 .GroupBy(g => new { g.IdSiteNavigation.Libelle, g.IdVehiculeNavigation.IdEnginNavigation.NomEngin })
                 .Select(s => new { label = s.Key.Libelle, type = s.Key.NomEngin, count = s.Count(), etat = "blocked" }).ToListAsync();
+
             var notSuspended = await _context.CheckListRef
-                .Where(w => w.Etat == false && new[] { "Plateau", "Benne", "Citerne" }
+                .Where(w => w.Etat != null && w.Etat == false && !string.IsNullOrEmpty(w.IdSiteNavigation.Libelle) && !string.IsNullOrEmpty(w.IdVehiculeNavigation.IdEnginNavigation.NomEngin) && new[] { "Plateau", "Benne", "Citerne" }
                 .Contains(w.IdVehiculeNavigation.IdEnginNavigation.NomEngin))
                 .GroupBy(g => new { g.IdSiteNavigation.Libelle, g.IdVehiculeNavigation.IdEnginNavigation.NomEngin })
                 .Select(s => new { label = s.Key.Libelle, type = s.Key.NomEngin, count = s.Count(), etat = "notBlocked" }).ToListAsync();
 
             var listUnion = notSuspended.Union(suspended);
 
-            var sites = _context.Site.Select(x => new SiteDTO { Label = x.Libelle });
+            var sites = _context.Site.Where(w => !String.IsNullOrEmpty(w.Libelle)).Select(x => new SiteDTO { Label = x.Libelle });
 
             var mapped = listUnion.Select(x =>
             {
