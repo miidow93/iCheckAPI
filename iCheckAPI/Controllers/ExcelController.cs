@@ -37,11 +37,11 @@ namespace iCheckAPI.Controllers
             var mm = new MemoryStream();
             System.Diagnostics.Debug.WriteLine(startDate + " " + endDate);
             System.Diagnostics.Debug.WriteLine("DateTime: " + DateTime.Parse(startDate) + " " + DateTime.Parse(endDate));
-            var blockages = await _context.Blockage.Where(x => x.DateBlockage >= DateTime.Parse(startDate) && x.DateBlockage <= DateTime.Parse(endDate)).ToListAsync();
+            var blockages = await _context.Blockage.Select(s => new { s.Id, s.IdVehiculeNavigation.Matricule, s.IdVehiculeNavigation.IdEnginNavigation.NomEngin, s.DateBlockage, s.DateDeblockage, s.Motif}).Where(x => x.DateBlockage >= DateTime.Parse(startDate) && x.DateBlockage <= DateTime.Parse(endDate)).ToListAsync();
             if (blockages.Count > 0)
             {
                 DataTable table = new DataTable();
-                string[] columns = { "Id", "IdVehicule", "DateBlockage", "Motif", "DateDeblockage" };
+                string[] columns = { "Id", "Matricule", "NomEngin", "DateBlockage", "DateDeblockage", "Motif" };
 
                 using (var reader = ObjectReader.Create(blockages, columns))
                 {
