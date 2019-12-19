@@ -27,6 +27,16 @@ namespace iCheckAPI.Controllers
             return _context.Site;
         }
 
+        [HttpGet("all")]
+        public async Task<IEnumerable<Object>> GetAllSites()
+        {
+            return await _context.Site.Select(s => new
+            {
+                s.Id,
+                label = s.Libelle
+            }).ToListAsync();
+        }
+
         // GET: api/Sites/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetSite([FromRoute] int id)
