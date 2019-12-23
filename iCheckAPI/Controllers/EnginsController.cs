@@ -29,7 +29,7 @@ namespace iCheckAPI.Controllers
         [HttpGet]
         public async Task<IEnumerable<Engins>> GetEngins()
         {
-            return await _context.Engins.ToListAsync();
+            return await _context.Engins.Where(w => new[] { "Plateau", "Benne", "Citerne" }.Contains(w.NomEngin)).ToListAsync();
         }
 
         [HttpGet("test")]
