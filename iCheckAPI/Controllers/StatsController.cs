@@ -54,6 +54,17 @@ namespace iCheckAPI.Controllers
             //return _context.CheckListRef.Count();
             return Ok(new { stats = monthStats });
         }
+        [HttpGet("NbrTotal")]
+        public async Task<IActionResult> GetStatsTotal()
+        {
+            var totalNonAut = await _context.CheckListRef.Where(g => g.Etat == true)
+                 .GroupBy(w => new { w.Etat })
+                 .Select(s => new { count = s.Count(), label = "Nonautoriser" }).ToListAsync();
+            var totalAut = await _context.CheckListRef.Where(g=>g.Etat == false)
+                 .GroupBy(w => new { w.Etat })
+                 .Select(s => new { count = s.Count(), label = "Autoriser" }).ToListAsync();
+            return Ok(new { nonAutoriser = totalNonAut , autoriser = totalAut});
+        }
 
         // GET: api/Stats
         [HttpGet("suspendu/{type}")]
