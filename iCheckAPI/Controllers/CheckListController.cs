@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using iCheckAPI.Models;
 using iCheckAPI.Repositories;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -23,18 +26,22 @@ namespace iCheckAPI.Controllers
         private readonly IConducteurRepo _conducteurRepo;
         private readonly IVehiculeRepo _vehiculeRepo;
         private readonly ISiteRepo _siteRepo;
+        public static IHostingEnvironment _environment;
+
 
         public CheckListController(CheckListRepo checkListRepo, 
             ICheckContext context, 
             IConducteurRepo conducteurRepo, 
             IVehiculeRepo vehiculeRepo,
-            ISiteRepo siteRepo)
+            ISiteRepo siteRepo,
+            IHostingEnvironment environment)
         {
             _checkListRepo = checkListRepo;
             _conducteurRepo = conducteurRepo;
             _vehiculeRepo = vehiculeRepo;
             _context = context;
             _siteRepo = siteRepo;
+            _environment = environment;
         }
 
         // GET: api/CheckList
@@ -100,9 +107,30 @@ namespace iCheckAPI.Controllers
             var conducteurID = conducteur != null ? conducteur.Id : -1;
             var vehiculeID = vehicule != null ? vehicule.Id : -1;
             var siteID = site != null ? site.Id : -1;
-            var blockageID = -1;
+            // var blockageID = -1;
+            if(!string.IsNullOrEmpty(checkList.ImageURL))
+            {
+                var imagePath = ConvertImage(checkList.ImageURL);
+                checkList.ImageURL = imagePath;
+                /*foreach (var image in checkList.ImagesURL)
+                {
+                    var imagePath = ConvertImage(image.Value);
+                    checkList.ImagesURL[image.Key] = imagePath;
+                    var imageKey = image.Key;
+                    var index = 0;
+                    foreach (var item in image.Value)
+                    {
+                        var imagePath = ConvertImage(item);
+                        checkList.ImagesURL[imageKey][index] = imagePath;
+                        index++;
+                        System.Diagnostics.Debug.WriteLine("Image Path: " + imagePath);
+                        System.Diagnostics.Debug.WriteLine("Image Index: " + checkList.ImagesURL[imageKey][index]);
+                    }
+                }*/
+            }
 
-            if(conducteur == null)
+
+            if (conducteur == null)
             {
                 Conducteur cond = new Conducteur()
                 {
@@ -160,12 +188,13 @@ namespace iCheckAPI.Controllers
                 blockage.IdVehicule = vehiculeID;
                 blockage.DateBlockage = checkList.Date.Value.Date;
                 blockage.IdCheckList = checkList.Id;
+                blockage.ImageUrl = checkList.ImageURL;
                 _context.Blockage.Add(blockage);
             }
            
             _context.SaveChanges();
-            checkList.Vehicule["idBlockage"] = blockage.IdVehicule != null ? blockage.Id.ToString() : "-1";
-            System.Diagnostics.Debug.WriteLine("BlockageID:" + blockageID);
+            // checkList.Vehicule["idBlockage"] = blockage.IdVehicule != null ? blockage.Id.ToString() : "-1";
+            // System.Diagnostics.Debug.WriteLine("BlockageID:" + blockageID);
             return CreatedAtAction("GetCheckList", new { id = checkList.Id.ToString() }, checkList);
         }
 
@@ -257,6 +286,35 @@ namespace iCheckAPI.Controllers
             await _checkListRepo.Delete(id);
 
             return NoContent();
+        }
+
+        public string ConvertImage(string image)
+        {
+            // var base64Data = Regex.Match(image, @"data:image/(?<type>.+?),(?<data>.+)").Groups["data"].Value;
+            // var type = Regex.Match(image, @"data:image/(?<type>.+?),").Groups["data"].Value;
+            var match = Regex.Match(image, @"data:image/(?<type>.+?);base64,(?<data>.+)");
+            var base64Data = match.Groups["data"].Value;
+            var contentType = match.Groups["type"].Value;
+            System.Diagnostics.Debug.WriteLine(contentType);
+            var bytes = Convert.FromBase64String(base64Data);
+            string folderName = "Upload";
+            string webRootPath = _environment.WebRootPath;
+            string pathToSave = Path.Combine(webRootPath, folderName);
+
+            if (!Directory.Exists(pathToSave))
+            {
+                Directory.CreateDirectory(pathToSave);
+            }
+            var fileName = Guid.NewGuid().ToString() + "." + contentType;
+            var fullPath = Path.Combine(pathToSave, fileName);
+            var dbPath = Path.Combine(folderName, fileName);
+
+            using (var stream = new FileStream(fullPath, FileMode.Create))
+            {
+                stream.Write(bytes, 0, bytes.Length);
+                stream.Flush();
+            }
+            return dbPath;
         }
     }
 }

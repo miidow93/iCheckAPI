@@ -44,6 +44,14 @@ namespace iCheckAPI.Models
         public Dictionary<string, object> CatchAll { get; set; }*/
 
         // [BsonElement("catchAll")]
+
+        [BsonElement("image")]
+        public string ImageURL { get; set; }
+
+        [BsonElement("motif")]
+        public string Motif { get; set; }
+
+
         [BsonExtraElements]
         public Dictionary<string, object> CatchAll { get; set; }
 
