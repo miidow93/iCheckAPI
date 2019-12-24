@@ -75,6 +75,20 @@ namespace iCheckAPI.Controllers
                 return NotFound();
             }
 
+            return new ObjectResult(checkList);
+        }
+
+        [HttpGet("byType/{type}")]
+        public async Task<IActionResult> GetCheckListByType(string type)
+        {
+            // var datetime = DateTime.ParseExact(date, "yyyy-MM-dd HH:mm:ss", null);
+
+            var checkList = await _checkListRepo.GetCheckListByType(type);
+            if (checkList == null)
+            {
+                return NotFound();
+            }
+
             return Ok(checkList);
         }
 
@@ -170,7 +184,7 @@ namespace iCheckAPI.Controllers
 
             await _checkListRepo.Create(checkList);
             System.Diagnostics.Debug.WriteLine(checkList.Id.ToString());
-
+            System.Diagnostics.Debug.WriteLine(checkList.Controlleur);
             _context.CheckListRef.Add(new CheckListRef()
             {
                 IdCheckListRef = checkList.Id.ToString(),
@@ -179,7 +193,8 @@ namespace iCheckAPI.Controllers
                 Etat = checkList.Etat,
                 IdConducteur = conducteurID,
                 IdVehicule = vehiculeID,
-                IdSite = siteID
+                IdSite = siteID,
+                IdControlleur = Convert.ToInt32(checkList.Controlleur["id"])
             }) ;
 
 
@@ -264,6 +279,7 @@ namespace iCheckAPI.Controllers
             checkListRef.IdVehicule = vehiculeID;
             checkListRef.IdCheckListRef = checkList.Id.ToString();
             checkListRef.IdSite = siteID;
+            checkListRef.IdControlleur = Convert.ToInt32(checkList.Controlleur["id"]);
 
             _context.Entry(checkListRef).State = EntityState.Modified;
 

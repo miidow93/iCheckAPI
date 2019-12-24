@@ -24,14 +24,14 @@ namespace iCheckAPI.Controllers
         [HttpGet]
         public async Task<IEnumerable<Object>> GetUsers()
         {
-            return _context.Users.Select(x => new
+            return await _context.Users.Select(x => new
             {
                 x.Id,
                 x.NomComplet,
-                x.UserName,
-                role = x.IdroleNavigation.Libelle,
+                x.Username,
+                role = x.IdRoleNavigation.Libelle,
                 site = x.IdSiteNavigation.Libelle
-            });
+            }).ToListAsync();
         }
 
         // GET: api/Users/5

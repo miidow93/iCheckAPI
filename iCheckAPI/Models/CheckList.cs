@@ -51,6 +51,9 @@ namespace iCheckAPI.Models
         [BsonElement("motif")]
         public string Motif { get; set; }
 
+        [BsonElement("controlleur")]
+        public Dictionary<string, string> Controlleur { get; set; }
+
 
         [BsonExtraElements]
         public Dictionary<string, object> CatchAll { get; set; }

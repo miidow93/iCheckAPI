@@ -26,6 +26,12 @@ namespace iCheckAPI.Repositories
             return await _context.Find(_ => true).ToListAsync();
         }
 
+        public async Task<IEnumerable<CheckList>> GetCheckListByType(string type)
+        {
+            var list = await _context.Find(x => x.Vehicule["engin"] == type).ToListAsync();
+            return list;
+        }
+
         public async Task<IEnumerable<CheckList>> GetCheckListByDate(DateTime date)
         {
             FilterDefinition<CheckList> filter = Builders<CheckList>.Filter.Eq(d => d.Date, date);
@@ -83,6 +89,7 @@ namespace iCheckAPI.Repositories
         Task<IEnumerable<CheckList>> GetAllCheckList();
         Task<IEnumerable<CheckList>> GetCheckListByDate(DateTime date);
         Task<CheckList> GetCheckListByID(string id);
+        Task<IEnumerable<CheckList>> GetCheckListByType(string type);
         Task Create(CheckList checkList);
         Task<bool> Update(CheckList checkList);
         // Task<bool> Delete(ObjectId id);
