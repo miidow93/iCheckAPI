@@ -29,7 +29,7 @@ namespace iCheckAPI.Controllers
         public IEnumerable<Blockage> GetBlockage()
         {
             return _context.Blockage.Include(x => x.IdVehiculeNavigation.Blockage)
-                                    .Include(c => c.IdVehiculeNavigation.CheckListRef);
+                                    .Include(c => c.IdVehiculeNavigation.CheckListRef).Include(a => a.IdVehiculeNavigation.IdEnginNavigation);
         }
 
         // GET: api/Blockages/5
