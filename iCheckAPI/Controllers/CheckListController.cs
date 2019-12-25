@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -29,9 +30,9 @@ namespace iCheckAPI.Controllers
         public static IHostingEnvironment _environment;
 
 
-        public CheckListController(CheckListRepo checkListRepo, 
-            ICheckContext context, 
-            IConducteurRepo conducteurRepo, 
+        public CheckListController(CheckListRepo checkListRepo,
+            ICheckContext context,
+            IConducteurRepo conducteurRepo,
             IVehiculeRepo vehiculeRepo,
             ISiteRepo siteRepo,
             IHostingEnvironment environment)
@@ -56,7 +57,7 @@ namespace iCheckAPI.Controllers
         public async Task<IActionResult> GetCheckListByID(string id)
         {
             var checkList = await _checkListRepo.GetCheckListByID(id);
-            if(checkList == null)
+            if (checkList == null)
             {
                 return NotFound();
             }
@@ -68,14 +69,14 @@ namespace iCheckAPI.Controllers
         public async Task<IActionResult> GetCheckListByDate(string date)
         {
             // var datetime = DateTime.ParseExact(date, "yyyy-MM-dd HH:mm:ss", null);
-            
+
             var checkList = await _checkListRepo.GetCheckListByDate(DateTime.Parse(date));
             if (checkList == null)
             {
                 return NotFound();
             }
 
-           
+
 
             return Ok(checkList);
         }
@@ -91,8 +92,36 @@ namespace iCheckAPI.Controllers
                 return NotFound();
             }
 
+            
+
             foreach (var item in checkList)
             {
+                List<bool> engins = new List<bool>();
+                System.Diagnostics.Debug.WriteLine("Get Type: " + item.CatchAll["checklistEngin"].GetType());
+                if (item.CatchAll["checklistEngin"].GetType().IsGenericType)
+                {
+                    System.Diagnostics.Debug.WriteLine("Is Array");
+                    IEnumerable enumerable = item.CatchAll["checklistEngin"] as IEnumerable;
+                    if (enumerable != null)
+                    {
+                        System.Diagnostics.Debug.WriteLine("Is Not Null");
+
+                        var index = 0;
+                        foreach (bool n in enumerable)
+                        {
+                            switch (index)
+                            {
+                                case 0: engins.Add(n); break;
+                                case 2: engins.Add(n); break;
+                                case 4: engins.Add(n); break;
+                                case 6: engins.Add(n); break;
+                                case 10: engins.Add(n); break;
+                            }
+                            index++;
+                        }
+                    }
+                }
+
                 list.Add(new CheckListDTO
                 {
                     Id = item.Id,
@@ -101,9 +130,10 @@ namespace iCheckAPI.Controllers
                     Date = item.Date,
                     Etat = item.Etat,
                     Site = item.Site,
+                    Motif = item.Motif,
                     Controlleur = item.Controlleur,
-                    CheckConduteur = item.CatchAll["checklistConducteur"],
-                    CheckEngin = item.CatchAll["checklistEngin"]
+                    CheckConducteur = item.CatchAll["checklistConducteur"],
+                    CheckEngin = engins
                 });
             }
 
@@ -140,7 +170,7 @@ namespace iCheckAPI.Controllers
             var vehiculeID = vehicule != null ? vehicule.Id : -1;
             var siteID = site != null ? site.Id : -1;
             // var blockageID = -1;
-            if(!string.IsNullOrEmpty(checkList.ImageURL))
+            if (!string.IsNullOrEmpty(checkList.ImageURL))
             {
                 var imagePath = ConvertImage(checkList.ImageURL);
                 checkList.ImageURL = imagePath;
@@ -174,7 +204,7 @@ namespace iCheckAPI.Controllers
                 conducteurID = cond.Id;
             }
 
-            if(vehicule == null)
+            if (vehicule == null)
             {
                 Vehicule vehi = new Vehicule()
                 {
@@ -213,10 +243,10 @@ namespace iCheckAPI.Controllers
                 IdVehicule = vehiculeID,
                 IdSite = siteID,
                 IdControlleur = Convert.ToInt32(checkList.Controlleur["id"])
-            }) ;
+            });
 
 
-            if(checkList.Etat)
+            if (checkList.Etat)
             {
                 blockage.IdVehicule = vehiculeID;
                 blockage.DateBlockage = checkList.Date.Value.Date;
@@ -224,7 +254,7 @@ namespace iCheckAPI.Controllers
                 blockage.ImageUrl = checkList.ImageURL;
                 _context.Blockage.Add(blockage);
             }
-           
+
             _context.SaveChanges();
             // checkList.Vehicule["idBlockage"] = blockage.IdVehicule != null ? blockage.Id.ToString() : "-1";
             // System.Diagnostics.Debug.WriteLine("BlockageID:" + blockageID);
@@ -237,7 +267,7 @@ namespace iCheckAPI.Controllers
         {
             var checkListSearch = _checkListRepo.GetCheckListByID(id);
 
-            if(checkListSearch == null)
+            if (checkListSearch == null)
             {
                 return NotFound();
             }
@@ -312,7 +342,7 @@ namespace iCheckAPI.Controllers
         {
             var checkList = _checkListRepo.GetCheckListByID(id);
 
-            if(checkList == null)
+            if (checkList == null)
             {
                 return NotFound();
             }
@@ -361,11 +391,12 @@ namespace iCheckAPI.Controllers
         public DateTime? Date { get; set; }
         public bool Etat { get; set; }
         public string Site { get; set; }
+        public string Motif { get; set; }
         public Dictionary<string, string> Controlleur { get; set; }
 
-        public object CheckConduteur { get; set; }
+        public object CheckConducteur { get; set; }
 
-        public object CheckEngin { get; set; }
+        public List<bool> CheckEngin { get; set; }
 
     }
 }
