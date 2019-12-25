@@ -68,28 +68,46 @@ namespace iCheckAPI.Controllers
         public async Task<IActionResult> GetCheckListByDate(string date)
         {
             // var datetime = DateTime.ParseExact(date, "yyyy-MM-dd HH:mm:ss", null);
-
+            
             var checkList = await _checkListRepo.GetCheckListByDate(DateTime.Parse(date));
             if (checkList == null)
             {
                 return NotFound();
             }
 
-            return new ObjectResult(checkList);
+           
+
+            return Ok(checkList);
         }
 
         [HttpGet("byType/{type}")]
         public async Task<IActionResult> GetCheckListByType(string type)
         {
             // var datetime = DateTime.ParseExact(date, "yyyy-MM-dd HH:mm:ss", null);
-
+            List<CheckListDTO> list = new List<CheckListDTO>();
             var checkList = await _checkListRepo.GetCheckListByType(type);
             if (checkList == null)
             {
                 return NotFound();
             }
 
-            return Ok(checkList);
+            foreach (var item in checkList)
+            {
+                list.Add(new CheckListDTO
+                {
+                    Id = item.Id,
+                    Conducteur = item.Conducteur["nomComplet"],
+                    Vehicule = item.Vehicule,
+                    Date = item.Date,
+                    Etat = item.Etat,
+                    Site = item.Site,
+                    Controlleur = item.Controlleur,
+                    CheckConduteur = item.CatchAll["checklistConducteur"],
+                    CheckEngin = item.CatchAll["checklistEngin"]
+                });
+            }
+
+            return Ok(list);
         }
 
 
@@ -332,5 +350,22 @@ namespace iCheckAPI.Controllers
             }
             return dbPath;
         }
+    }
+
+    internal class CheckListDTO
+    {
+        public string Id { get; set; }
+
+        public string Conducteur { get; set; }
+        public Dictionary<string, string> Vehicule { get; set; }
+        public DateTime? Date { get; set; }
+        public bool Etat { get; set; }
+        public string Site { get; set; }
+        public Dictionary<string, string> Controlleur { get; set; }
+
+        public object CheckConduteur { get; set; }
+
+        public object CheckEngin { get; set; }
+
     }
 }
