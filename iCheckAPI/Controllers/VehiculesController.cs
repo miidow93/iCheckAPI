@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using iCheckAPI.Models;
+using System.Text.RegularExpressions;
+using System.IO;
+using Microsoft.AspNetCore.Hosting;
 
 namespace iCheckAPI.Controllers
 {
@@ -14,10 +17,12 @@ namespace iCheckAPI.Controllers
     public class VehiculesController : ControllerBase
     {
         private readonly ICheckContext _context;
+        public static IHostingEnvironment _environment;
 
-        public VehiculesController(ICheckContext context)
+        public VehiculesController(ICheckContext context,IHostingEnvironment environment)
         {
             _context = context;
+            _environment = environment;
         }
 
         // GET: api/Vehicules
@@ -99,6 +104,12 @@ namespace iCheckAPI.Controllers
                 return BadRequest(ModelState);
             }
 
+            if(!string.IsNullOrEmpty(vehicule.ImageUrl))
+            {
+                var imagePath = ConvertImage(vehicule.ImageUrl);
+                vehicule.ImageUrl = imagePath;
+            }
+
             _context.Vehicule.Add(vehicule);
             await _context.SaveChangesAsync();
 
@@ -129,6 +140,35 @@ namespace iCheckAPI.Controllers
         private bool VehiculeExists(int id)
         {
             return _context.Vehicule.Any(e => e.Id == id);
+        }
+
+        public string ConvertImage(string image)
+        {
+            // var base64Data = Regex.Match(image, @"data:image/(?<type>.+?),(?<data>.+)").Groups["data"].Value;
+            // var type = Regex.Match(image, @"data:image/(?<type>.+?),").Groups["data"].Value;
+            var match = Regex.Match(image, @"data:image/(?<type>.+?);base64,(?<data>.+)");
+            var base64Data = match.Groups["data"].Value;
+            var contentType = match.Groups["type"].Value;
+            System.Diagnostics.Debug.WriteLine(contentType);
+            var bytes = Convert.FromBase64String(base64Data);
+            string folderName = "Upload";
+            string webRootPath = _environment.WebRootPath;
+            string pathToSave = Path.Combine(webRootPath, folderName);
+
+            if (!Directory.Exists(pathToSave))
+            {
+                Directory.CreateDirectory(pathToSave);
+            }
+            var fileName = Guid.NewGuid().ToString() + "." + contentType;
+            var fullPath = Path.Combine(pathToSave, fileName);
+            var dbPath = Path.Combine(folderName, fileName);
+
+            using (var stream = new FileStream(fullPath, FileMode.Create))
+            {
+                stream.Write(bytes, 0, bytes.Length);
+                stream.Flush();
+            }
+            return dbPath;
         }
     }
 }
