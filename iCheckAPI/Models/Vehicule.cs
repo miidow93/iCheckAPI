@@ -14,6 +14,8 @@ namespace iCheckAPI.Models
         public int Id { get; set; }
         public string Matricule { get; set; }
         public int? IdEngin { get; set; }
+        public DateTime? DateValidite { get; set; }
+        public string ImageUrl { get; set; }
 
         public Engins IdEnginNavigation { get; set; }
         public ICollection<Blockage> Blockage { get; set; }

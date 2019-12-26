@@ -30,7 +30,7 @@ namespace iCheckAPI.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=.;Database=iCheck;Trusted_Connection=True;");
+                optionsBuilder.UseSqlServer("server=.;database=iCheck;integrated security=true");
             }
         }
 
@@ -86,9 +86,9 @@ namespace iCheckAPI.Models
 
                 entity.Property(e => e.IdConducteur).HasColumnName("idConducteur");
 
-                entity.Property(e => e.IdSite).HasColumnName("idSite");
-
                 entity.Property(e => e.IdControlleur).HasColumnName("idControlleur");
+
+                entity.Property(e => e.IdSite).HasColumnName("idSite");
 
                 entity.Property(e => e.IdVehicule).HasColumnName("idVehicule");
 
@@ -99,15 +99,15 @@ namespace iCheckAPI.Models
                     .HasForeignKey(d => d.IdConducteur)
                     .HasConstraintName("fk_idCond");
 
-                entity.HasOne(d => d.IdSiteNavigation)
-                    .WithMany(p => p.CheckListRef)
-                    .HasForeignKey(d => d.IdSite)
-                    .HasConstraintName("fk_idSiteCheckListRef");
-
                 entity.HasOne(d => d.IdControlleurNavigation)
                     .WithMany(p => p.CheckListRef)
                     .HasForeignKey(d => d.IdControlleur)
                     .HasConstraintName("fk_controlleur");
+
+                entity.HasOne(d => d.IdSiteNavigation)
+                    .WithMany(p => p.CheckListRef)
+                    .HasForeignKey(d => d.IdSite)
+                    .HasConstraintName("fk_idSiteCheckListRef");
 
                 entity.HasOne(d => d.IdVehiculeNavigation)
                     .WithMany(p => p.CheckListRef)
@@ -254,7 +254,15 @@ namespace iCheckAPI.Models
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
+                entity.Property(e => e.DateValidite)
+                    .HasColumnName("dateValidite")
+                    .HasColumnType("date");
+
                 entity.Property(e => e.IdEngin).HasColumnName("idEngin");
+
+                entity.Property(e => e.ImageUrl)
+                    .HasColumnName("imageUrl")
+                    .IsUnicode(false);
 
                 entity.Property(e => e.Matricule)
                     .HasColumnName("matricule")

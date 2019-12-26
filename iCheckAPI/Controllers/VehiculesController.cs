@@ -24,7 +24,7 @@ namespace iCheckAPI.Controllers
         [HttpGet]
         public IEnumerable<Vehicule> GetVehicule()
         {
-            return _context.Vehicule.Include(w => w.IdEnginNavigation);
+            return _context.Vehicule.Include(x => x.IdEnginNavigation);
         }
 
         // GET: api/Vehicules/5
@@ -46,7 +46,6 @@ namespace iCheckAPI.Controllers
             return Ok(vehicule);
         }
 
-
         [HttpGet("{engin}")]
         public IEnumerable<Vehicule> GetVehiculeByEngin([FromRoute] string engin)
         {
@@ -54,7 +53,6 @@ namespace iCheckAPI.Controllers
 
             return vehicules;
         }
-
 
 
         // PUT: api/Vehicules/5

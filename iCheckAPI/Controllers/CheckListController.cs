@@ -81,12 +81,12 @@ namespace iCheckAPI.Controllers
             return Ok(checkList);
         }
 
-        [HttpGet("byType/{type}")]
-        public async Task<IActionResult> GetCheckListByType(string type)
+        [HttpGet("all")]
+        public async Task<IActionResult> GetCheckListByType()
         {
             // var datetime = DateTime.ParseExact(date, "yyyy-MM-dd HH:mm:ss", null);
             List<CheckListDTO> list = new List<CheckListDTO>();
-            var checkList = await _checkListRepo.GetCheckListByType(type);
+            var checkList = await _checkListRepo.GetAllCheckList();
             if (checkList == null)
             {
                 return NotFound();

@@ -16,8 +16,8 @@ namespace iCheckAPI.Models
         public int? IdControlleur { get; set; }
 
         public Conducteur IdConducteurNavigation { get; set; }
-        public Site IdSiteNavigation { get; set; }
         public Users IdControlleurNavigation { get; set; }
+        public Site IdSiteNavigation { get; set; }
         public Vehicule IdVehiculeNavigation { get; set; }
     }
 }
