@@ -176,7 +176,7 @@ namespace iCheckAPI.Controllers
         [HttpGet("controled")]
         public int NomberCamion()
         {
-            var a = _context.CheckListRef.Count();
+            var a = _context.CheckListRef.Where(w => !string.IsNullOrEmpty(w.IdSiteNavigation.Libelle) && !string.IsNullOrEmpty(w.IdVehiculeNavigation.IdEnginNavigation.NomEngin)).Count();
             return a;
         }
 
