@@ -34,7 +34,8 @@ namespace iCheckAPI.Controllers
                 s.IdEngin,
                 nomEngin = s.IdEnginNavigation.NomEngin,
                 s.Matricule,
-                s.ImageUrl
+                s.ImageUrl,
+                s.DateValidite
             });
         }
 
