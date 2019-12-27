@@ -27,9 +27,15 @@ namespace iCheckAPI.Controllers
 
         // GET: api/Vehicules
         [HttpGet]
-        public IEnumerable<Vehicule> GetVehicule()
+        public IEnumerable<object> GetVehicule()
         {
-            return _context.Vehicule.Include(x => x.IdEnginNavigation);
+            return _context.Vehicule.Where(w => w.IdEngin != null).Select(s => new { 
+                s.Id,
+                s.IdEngin,
+                nomEngin = s.IdEnginNavigation.NomEngin,
+                s.Matricule,
+                s.ImageUrl
+            });
         }
 
         // GET: api/Vehicules/5
