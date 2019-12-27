@@ -82,6 +82,16 @@ namespace iCheckAPI.Controllers
             }
 
             _context.Entry(vehicule).State = EntityState.Modified;
+            if (vehicule.ImageUrl.Contains("Upload"))
+            {
+                System.Diagnostics.Debug.WriteLine(vehicule.ImageUrl);
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("Base64");
+                var imagePath = ConvertImage(vehicule.ImageUrl);
+                vehicule.ImageUrl = imagePath;
+            }
 
             try
             {
