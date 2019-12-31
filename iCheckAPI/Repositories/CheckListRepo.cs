@@ -82,6 +82,14 @@ namespace iCheckAPI.Repositories
             return deleteResult.IsAcknowledged && deleteResult.DeletedCount > 0;
 
         }
+
+        public Task<CheckList> GetLastCheckListByMatricule(string matricule)
+        {
+            FilterDefinition<CheckList> filter = Builders<CheckList>.Filter.Eq(m => m.Vehicule["matricule"], matricule);
+            var checklist = _context.Find(filter).Limit(1).SortByDescending(x => x.Date).FirstOrDefaultAsync();
+
+            return checklist;
+        }
     }
 
     public interface ICheckListRepo
@@ -90,6 +98,8 @@ namespace iCheckAPI.Repositories
         Task<IEnumerable<CheckList>> GetCheckListByDate(DateTime date);
         Task<CheckList> GetCheckListByID(string id);
         Task<IEnumerable<CheckList>> GetCheckListByType(string type);
+
+        Task<CheckList> GetLastCheckListByMatricule(string matricule);
         Task Create(CheckList checkList);
         Task<bool> Update(CheckList checkList);
         // Task<bool> Delete(ObjectId id);

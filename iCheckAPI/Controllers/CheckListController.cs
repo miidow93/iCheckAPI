@@ -81,6 +81,22 @@ namespace iCheckAPI.Controllers
             return Ok(checkList);
         }
 
+        [HttpGet("qrcode/{matricule}")]
+        public async Task<IActionResult> GetCheckListByMatricule(string matricule)
+        {
+            // var datetime = DateTime.ParseExact(date, "yyyy-MM-dd HH:mm:ss", null);
+
+            var checkList = await _checkListRepo.GetLastCheckListByMatricule(matricule);
+            if (checkList == null)
+            {
+                return NotFound();
+            }
+
+
+
+            return Ok(checkList);
+        }
+
         [HttpGet("all")]
         public async Task<IActionResult> GetCheckListByType()
         {
