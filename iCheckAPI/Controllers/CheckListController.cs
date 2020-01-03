@@ -92,8 +92,6 @@ namespace iCheckAPI.Controllers
                 return NotFound();
             }
 
-
-
             return Ok(checkList);
         }
 
