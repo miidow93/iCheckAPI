@@ -145,6 +145,7 @@ namespace iCheckAPI.Controllers
                     Etat = item.Etat,
                     Site = item.Site,
                     Motif = item.Motif,
+                    ImageURL = item.ImageURL,
                     Controlleur = item.Controlleur,
                     CheckConducteur = item.CatchAll["checklistConducteur"],
                     CheckEngin = engins
@@ -407,7 +408,7 @@ namespace iCheckAPI.Controllers
         public string Site { get; set; }
         public string Motif { get; set; }
         public Dictionary<string, string> Controlleur { get; set; }
-
+        public string ImageURL { get; set; }
         public object CheckConducteur { get; set; }
 
         public List<bool> CheckEngin { get; set; }
