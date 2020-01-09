@@ -67,6 +67,7 @@ namespace iCheckAPI.Controllers
                 nomComplet = user.NomComplet != null ? user.NomComplet : "Anonymous",
                 id = user.Id,
                 site = location,
+                siteID = user.IdSite,
                 role = libelle
             });
         }

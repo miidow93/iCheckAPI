@@ -33,6 +33,52 @@ namespace iCheckAPI.Controllers
         [HttpGet]
         public async Task<IEnumerable<Object>> GetCheckListRef()
         {
+            var site = await _context.Site.Select(s => new { s.Id, s.Libelle }).ToListAsync();
+            var checklistRef = await _context.CheckListRef.Select(s => new
+            {
+                s.Id,
+                s.IdCheckListRef,
+                s.IdConducteur,
+                s.IdVehicule,
+                s.IdSite,
+                NomComplet = s.IdConducteurNavigation.NomComplet,
+                Matricule = s.IdVehiculeNavigation.Matricule,
+                NomEngin = s.IdVehiculeNavigation.IdEnginNavigation.NomEngin,
+                s.Date,
+                s.Etat,
+                s.Rating
+            }).ToListAsync();
+
+            var mapped = new List<object>();
+
+            foreach(var item in checklistRef)
+            {
+                var location = site.Find(x => x.Id == item.IdSite).Libelle;
+                mapped.Add(new
+                {
+                    item.Id,
+                    item.IdCheckListRef,
+                    item.IdConducteur,
+                    item.IdVehicule,
+                    site = location,
+                    item.NomComplet,
+                    item.Matricule,
+                    item.NomEngin,
+                    item.Date,
+                    item.Etat,
+                    item.Rating
+                });
+            }
+
+
+            return mapped;
+                                       
+        }
+
+        [HttpGet("bySite/{site}")]
+        public async Task<IEnumerable<Object>> GetCheckListRefBySite([FromRoute] string site)
+        {
+            var siteID = _context.Site.Where(w => w.Libelle.ToUpper() == site.ToUpper()).FirstOrDefault().Id;
             return await _context.CheckListRef.Select(s => new
             {
                 s.Id,
@@ -46,8 +92,8 @@ namespace iCheckAPI.Controllers
                 s.Date,
                 s.Etat,
                 s.Rating
-            }).ToListAsync();
-                                       
+            }).Where(x => x.IdSite == siteID).ToListAsync();
+
         }
 
         [HttpGet("blocked")]
