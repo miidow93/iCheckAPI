@@ -75,6 +75,13 @@ namespace iCheckAPI.Repositories
 
         }*/
 
+        public async Task<int> GetCountControledEngin(int index)
+        {
+            FilterDefinition<CheckList> filter = Builders<CheckList>.Filter.ElemMatch<BsonDocument>("checklistEngin", new BsonDocument() { { $"{index}", false } });
+            var checklist = await _context.Find(filter).ToListAsync();
+            return checklist.Count;
+        }
+
         public async Task<bool> Delete(string id)
         {
             FilterDefinition<CheckList> filter = Builders<CheckList>.Filter.Eq(m => m.Id, id);
@@ -98,6 +105,8 @@ namespace iCheckAPI.Repositories
         Task<IEnumerable<CheckList>> GetCheckListByDate(DateTime date);
         Task<CheckList> GetCheckListByID(string id);
         Task<IEnumerable<CheckList>> GetCheckListByType(string type);
+
+        Task<int> GetCountControledEngin(int index);
 
         Task<CheckList> GetLastCheckListByMatricule(string matricule);
         Task Create(CheckList checkList);

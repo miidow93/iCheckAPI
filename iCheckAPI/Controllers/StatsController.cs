@@ -8,6 +8,9 @@ using Microsoft.AspNetCore.Mvc;
 using System.Globalization;
 using Microsoft.EntityFrameworkCore;
 using System.Dynamic;
+using iCheckAPI.Repositories;
+using System.Collections;
+using MongoDB.Bson;
 
 namespace iCheckAPI.Controllers
 {
@@ -21,10 +24,11 @@ namespace iCheckAPI.Controllers
         // synthese mensuel des camions.
         // nombre des camions suspendus par site + nombre total des camions controlés
         private readonly ICheckContext _context;
-
-        public StatsController(ICheckContext context)
+        private readonly CheckListRepo _checkListRepo;
+        public StatsController(ICheckContext context, CheckListRepo checkListRepo)
         {
             _context = context;
+            _checkListRepo = checkListRepo;
         }
         // GET: api/Stats
         [HttpGet("synthese/{type}")]
@@ -60,10 +64,10 @@ namespace iCheckAPI.Controllers
             var totalNonAut = await _context.CheckListRef.Where(g => g.Etat == true)
                  .GroupBy(w => new { w.Etat })
                  .Select(s => new { count = s.Count(), label = "Nonautoriser" }).ToListAsync();
-            var totalAut = await _context.CheckListRef.Where(g=>g.Etat == false)
+            var totalAut = await _context.CheckListRef.Where(g => g.Etat == false)
                  .GroupBy(w => new { w.Etat })
                  .Select(s => new { count = s.Count(), label = "Autoriser" }).ToListAsync();
-            return Ok(new { nonAutoriser = totalNonAut , autoriser = totalAut});
+            return Ok(new { nonAutoriser = totalNonAut, autoriser = totalAut });
         }
 
         // GET: api/Stats
@@ -208,8 +212,162 @@ namespace iCheckAPI.Controllers
             }
             return res;
         }
-    }
 
+
+        [HttpGet("test2")]
+        public Task<int> GetTest()
+        {
+            var test = _checkListRepo.GetCountControledEngin(4);
+            return test;
+        }
+
+
+        [HttpGet("test")]
+        public async Task<IActionResult> GetMostErrorControl()
+        {
+            var most = new List<MostControlError>();
+            var checklist = await _checkListRepo.GetAllCheckList();
+            var id = 1;
+
+            if (checklist.ToList().Count > 0)
+            {
+                foreach (var item in checklist)
+                {
+                    List<bool> engins = new List<bool>();
+                    // System.Diagnostics.Debug.WriteLine("Get Type: " + item.CatchAll["checklistEngin"].GetType());
+                    if (item.CatchAll["checklistEngin"].GetType().IsGenericType)
+                    {
+
+                        System.Diagnostics.Debug.WriteLine("Is Array");
+                        IEnumerable enumerable = item.CatchAll["checklistEngin"] as IEnumerable;
+                        if (enumerable != null)
+                        {
+                            // System.Diagnostics.Debug.WriteLine("Is Not Null");
+
+                            var index = 0;
+                            foreach (bool n in enumerable)
+                            {
+                                switch (index)
+                                {
+                                    case 0: engins.Add(n); break;
+                                    case 2: engins.Add(n); break;
+                                    case 4: engins.Add(n); break;
+                                    case 6: engins.Add(n); break;
+                                    case 10: engins.Add(n); break;
+                                }
+                                index++;
+                            }
+                        }
+                    }
+
+                    List<bool> conducteurs = new List<bool>();
+                    if (item.CatchAll["checklistConducteur"].GetType().IsGenericType)
+                    {
+                        // System.Diagnostics.Debug.WriteLine("Is Array");
+                        IEnumerable enumerable = item.CatchAll["checklistConducteur"] as IEnumerable;
+                        if (enumerable != null)
+                        {
+                            // System.Diagnostics.Debug.WriteLine("Is Not Null");
+
+                            foreach (bool n in enumerable)
+                            {
+                                conducteurs.Add(n);
+                            }
+                        }
+                    }
+
+                    most.Add(new MostControlError { ID = id, Engins = engins, Conducteurs = conducteurs });
+                    id++;
+                    if (id == 10)
+                        break;
+                }
+            }
+
+            var indexEngin = 0;
+            var indexCond = 0;
+
+            var countIndexEngin0 = 0;
+            var countIndexEngin1 = 0;
+            var countIndexEngin2 = 0;
+            var countIndexEngin3 = 0;
+            var countIndexEngin4 = 0;
+
+            var countIndexCond0 = 0;
+            var countIndexCond1 = 0;
+            var countIndexCond2 = 0;
+            var countIndexCond3 = 0;
+            var countIndexCond4 = 0;
+
+            var counter = 0;
+            // var checkCount = new List<object>();
+            var count = new List<object>();
+            foreach (var item in most)
+            {
+
+                foreach (var engin in item.Engins)
+                {
+                    if (!engin)
+                    {
+                        // System.Diagnostics.Debug.WriteLine("Engin: In List: " + counter + ", Index In Array: " + index1);
+                        // checkCount.Add(new { indexInList = counter, indexInArray = index1 });
+                        switch (indexEngin)
+                        {
+                            case 0: countIndexEngin0++; break;
+                            case 1: countIndexEngin1++; break;
+                            case 2: countIndexEngin2++; break;
+                            case 3: countIndexEngin3++; break;
+                            case 4: countIndexEngin4++; break;
+                        }
+                        indexEngin++;
+                    }
+
+                }
+
+                foreach (var cond in item.Conducteurs)
+                {
+                    if (!cond)
+                    {
+                        // System.Diagnostics.Debug.WriteLine("Engin: In List: " + counter + ", Index In Array: " + index1);
+                        // checkCount.Add(new { indexInList = counter, indexInArray = index1 });
+                        switch (indexCond)
+                        {
+                            case 0: countIndexCond0++; break;
+                            case 1: countIndexCond1++; break;
+                            case 2: countIndexCond2++; break;
+                            case 3: countIndexCond3++; break;
+                            case 4: countIndexCond4++; break;
+                        }
+                        indexCond++;
+                    }
+
+                }
+                counter++;
+                indexEngin = 0;
+                indexCond = 0;
+            }
+
+            count.Add(new
+            {
+                Engin = new
+                {
+                    controle1 = countIndexEngin0,
+                    controle2 = countIndexEngin1,
+                    controle3 = countIndexEngin2,
+                    controle4 = countIndexEngin3,
+                    controle5 = countIndexEngin4
+                },
+                Cond = new
+                {
+                    controle1 = countIndexCond0,
+                    controle2 = countIndexCond1,
+                    controle3 = countIndexCond2,
+                    controle4 = countIndexCond3,
+                    controle5 = countIndexCond4
+                }
+            });
+            return Ok(count);
+        }
+    }
     internal class Stats
     {
         public string Label { get; set; }
@@ -222,4 +380,12 @@ namespace iCheckAPI.Controllers
     {
         public string Label { get; set; }
     }
+
+    internal class MostControlError
+    {
+        public int ID { get; set; }
+        public List<bool> Engins { get; set; }
+        public List<bool> Conducteurs { get; set; }
+    }
 }
+
