@@ -53,7 +53,7 @@ namespace iCheckAPI.Controllers
 
             foreach(var item in checklistRef)
             {
-                var location = site.Find(x => x.Id == item.IdSite).Libelle;
+                var location = site.Find(x => x.Id == item.IdSite && !string.IsNullOrEmpty(x.Libelle)).Libelle;
                 mapped.Add(new
                 {
                     item.Id,
